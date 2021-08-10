@@ -518,31 +518,33 @@ int main(int args, char **argv) {
     };*/
     //int ar2[] = {100, 203, 184, 5, 10, 84, 209, 0, 74, 97, 225, 232, 187, 113, 214, 141, 125, 131, 254, 200, 132, 210, 240, 164, 13, 130, 51, 201, 121, 63, 249, 162, 120, 202, 148, 36, 45, 1, 171, 65, 20, 80, 59, 56, 186, 192, 153, 138, 124, 126, 39, 196, 27, 238, 82, 144, 237, 221, 11, 110, 47, 103, 18, 14, 243, 251, 55, 25, 28, 33, 68, 147, 96, 35, 93, 142, 29, 73, 106, 234, 108, 90, 64, 151, 111, 253, 78, 158, 152, 43, 7, 182, 167, 4, 218, 231, 112, 72, 248, 6, 91, 178, 52, 57, 69, 145, 37, 79, 181, 247, 143, 67, 198, 241, 205, 155, 161, 92, 134, 246, 24, 137, 177, 170, 199, 15, 149, 105, 49, 174, 53, 8, 83, 107, 70, 189, 197, 71, 195, 109, 233, 98, 156, 66, 2, 213, 166, 19, 60, 204, 250, 183, 168, 239, 212, 87, 222, 54, 31, 154, 104, 163, 230, 129, 215, 191, 3, 219, 127, 185, 173, 188, 117, 88, 136, 46, 44, 176, 242, 227, 180, 58, 128, 34, 62, 21, 99, 235, 32, 206, 226, 16, 255, 157, 114, 236, 42, 75, 81, 17, 101, 223, 146, 102, 76, 135, 207, 245, 216, 165, 217, 40, 228, 77, 61, 38, 94, 95, 150, 123, 190, 194, 86, 85, 172, 115, 50, 179, 48, 89, 160, 244, 26, 12, 229, 175, 140, 30, 41, 252, 119, 193, 22, 118, 133, 208, 169, 211, 116, 220, 122, 9, 139, 159, 224, 23};
     int ar2[256];
+
+    //Зчитування S-Box'у з файлу
     FILE *fin;
     fin = fopen("input.txt", "r");
-    for (int i =0;i<256;i++)
-    {
-        fscanf(fin,"%d, ",&ar2[i]);
+    for (int i = 0; i < 256; i++) {
+        fscanf(fin, "%d, ", &ar2[i]);
     }
     fclose(fin);
 
     //int ar2[] = {3, 106, 87, 164, 169, 243, 112, 241, 109, 0, 128, 135, 90, 16, 129, 44, 28, 34, 157, 103, 35, 113, 143, 67, 172, 33, 210, 104, 24, 222, 152, 65, 23, 105, 51, 195, 204, 160, 74, 224, 179, 239, 218, 215, 197, 85, 56, 41, 27, 29, 198, 99, 186, 141, 155, 47, 140, 124, 170, 13, 206, 6, 177, 173, 146, 154, 214, 184, 187, 192, 227, 50, 255, 194, 233, 45, 188, 232, 9, 95, 11, 249, 223, 54, 14, 156, 237, 61, 55, 202, 166, 117, 70, 163, 121, 134, 15, 231, 151, 165, 250, 81, 211, 216, 228, 48, 196, 238, 84, 150, 46, 226, 101, 144, 108, 58, 64, 251, 37, 149, 183, 40, 252, 73, 102, 174, 52, 8, 208, 77, 212, 167, 242, 10, 229, 92, 100, 230, 98, 12, 136, 1, 59, 225, 161, 116, 69, 178, 219, 107, 153, 86, 71, 142, 115, 246, 125, 213, 190, 57, 7, 66, 133, 32, 118, 94, 162, 122, 30, 88, 76, 148, 20, 247, 39, 205, 203, 79, 145, 130, 83, 217, 31, 193, 221, 180, 2, 138, 191, 89, 137, 175, 158, 60, 17, 139, 201, 234, 240, 176, 4, 126, 49, 5, 235, 38, 110, 80, 119, 68, 120, 199, 131, 236, 220, 159, 253, 254, 53, 26, 93, 97, 245, 244, 75, 18, 209, 82, 207, 248, 63, 147, 185, 171, 132, 78, 43, 189, 200, 91, 22, 96, 181, 21, 36, 111, 72, 114, 19, 123, 25, 168, 42, 62, 127, 182 };
-    FILE* file;
-    fopen_s(&file,"sbox.txt", "w");
+    //Запис S-Box'у до файлу та обчислення необхідних параметрів
+    FILE *file;
+    fopen_s(&file, "sbox.txt", "w");
     if (file == NULL) {
         printf("ERROR: Can't save sbox to file!\n");
         for (;;);
     }
     fprintf(file, "\n");
-    for (int i = 0;i < 256;i++) {
+    for (int i = 0; i < 256; i++) {
         fprintf(file, "%d, ", ar2[i]);
     }
     fprintf(file, "\n");
 
     int res = deltaUniformity(ar2, size, n);
 
-    fprintf(file,"\nDelta Uniformity = %d ", res);
-    fprintf(file,"\n");
+    fprintf(file, "\nDelta Uniformity = %d ", res);
+    fprintf(file, "\n");
 
     /*int mdt = differenceTableMax(ar2, size);
 
@@ -552,32 +554,32 @@ int main(int args, char **argv) {
 
     int LAT = LATMax(ar2, size, n);
 
-    fprintf(file,"LAT Max = %d ", LAT);
-    fprintf(file,"\n");
+    fprintf(file, "LAT Max = %d ", LAT);
+    fprintf(file, "\n");
 
     int NL = raiseToPower(2, n - 1) - LAT;
-    fprintf(file,"Non-linearity from LAT = %d ", NL);
+    fprintf(file, "Non-linearity from LAT = %d ", NL);
 
     int cs = cyclicStructure(ar2, size);
-    fprintf(file,"\nCycle = %d ", cs);
+    fprintf(file, "\nCycle = %d ", cs);
 
     int fp = fixedPoints(ar2, size);
 
     if (fp > 0)
-        fprintf(file,"\nCapacity of fixed points: %d", fp);
+        fprintf(file, "\nCapacity of fixed points: %d", fp);
     else
-        fprintf(file,"\nFixed points ain't found\n");
+        fprintf(file, "\nFixed points ain't found\n");
 
     int md = minDegree(ar2, size, n);
 
     //int md = get_min_degree(ar2);
 
-    fprintf(file,"Minimal algebraic degree = %d ", md);
+    fprintf(file, "Minimal algebraic degree = %d ", md);
 
     int ai = algebraicImmunity(ar2, size, n);
 
-    fprintf(file,"\nAlgebraic Immunity = %d ", ai);
-    fprintf(file,"\n");
+    fprintf(file, "\nAlgebraic Immunity = %d ", ai);
+    fprintf(file, "\n");
     fclose(file);
 
     printf("\nDelta Uniformity = %d ", res);
@@ -2419,14 +2421,14 @@ int algebraicImmunity(const int *sbox, int size, int count) {
         values[15] = input_values[y * count + 7];
         buildOneRow((int *) &values, (int *) &mat[i]);
     }
-    int rank = rankCalculation(rows,cols,mat);
+    int rank = rankCalculation(rows, cols, mat);
     free(bin);
     free(input_values);
     //printf("%d", rank);
-    if (rank == rows){
+    if (rank == rows) {
         return result;
     } else {
-        return result-1;
+        return result - 1;
     }
 }
 
