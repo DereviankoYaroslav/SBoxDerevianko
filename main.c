@@ -120,6 +120,12 @@ int rankCalculation(int rows, int cols, int a[rows][cols]);
 
 int algebraicImmunity(const int *sbox, int size, int count);
 
+void bubble_sort(int *data, int size);
+
+int *WHTSpectrumForLinearComb(const int *arr, int size, int count);
+
+int linearRedundancy(int *sbox, int size, int count);
+
 int main(int args, char **argv) {
     SetConsoleOutputCP(1251);
     SetConsoleCP(1251);
@@ -517,7 +523,7 @@ int main(int args, char **argv) {
                  7, 224, 10, 171, 19, 177, 64, 194, 214, 23, 78
     };*/
     //int ar2[] = {100, 203, 184, 5, 10, 84, 209, 0, 74, 97, 225, 232, 187, 113, 214, 141, 125, 131, 254, 200, 132, 210, 240, 164, 13, 130, 51, 201, 121, 63, 249, 162, 120, 202, 148, 36, 45, 1, 171, 65, 20, 80, 59, 56, 186, 192, 153, 138, 124, 126, 39, 196, 27, 238, 82, 144, 237, 221, 11, 110, 47, 103, 18, 14, 243, 251, 55, 25, 28, 33, 68, 147, 96, 35, 93, 142, 29, 73, 106, 234, 108, 90, 64, 151, 111, 253, 78, 158, 152, 43, 7, 182, 167, 4, 218, 231, 112, 72, 248, 6, 91, 178, 52, 57, 69, 145, 37, 79, 181, 247, 143, 67, 198, 241, 205, 155, 161, 92, 134, 246, 24, 137, 177, 170, 199, 15, 149, 105, 49, 174, 53, 8, 83, 107, 70, 189, 197, 71, 195, 109, 233, 98, 156, 66, 2, 213, 166, 19, 60, 204, 250, 183, 168, 239, 212, 87, 222, 54, 31, 154, 104, 163, 230, 129, 215, 191, 3, 219, 127, 185, 173, 188, 117, 88, 136, 46, 44, 176, 242, 227, 180, 58, 128, 34, 62, 21, 99, 235, 32, 206, 226, 16, 255, 157, 114, 236, 42, 75, 81, 17, 101, 223, 146, 102, 76, 135, 207, 245, 216, 165, 217, 40, 228, 77, 61, 38, 94, 95, 150, 123, 190, 194, 86, 85, 172, 115, 50, 179, 48, 89, 160, 244, 26, 12, 229, 175, 140, 30, 41, 252, 119, 193, 22, 118, 133, 208, 169, 211, 116, 220, 122, 9, 139, 159, 224, 23};
-    int ar2[256];
+    /*int ar2[256];
 
     //Зчитування S-Box'у з файлу
     FILE *fin;
@@ -527,9 +533,6 @@ int main(int args, char **argv) {
     }
     fclose(fin);
 
-    /*for (int i = 0; i < 256; i++) {
-        printf("%d ",ar2[i]);
-    }*/
     //int ar2[] = {3, 106, 87, 164, 169, 243, 112, 241, 109, 0, 128, 135, 90, 16, 129, 44, 28, 34, 157, 103, 35, 113, 143, 67, 172, 33, 210, 104, 24, 222, 152, 65, 23, 105, 51, 195, 204, 160, 74, 224, 179, 239, 218, 215, 197, 85, 56, 41, 27, 29, 198, 99, 186, 141, 155, 47, 140, 124, 170, 13, 206, 6, 177, 173, 146, 154, 214, 184, 187, 192, 227, 50, 255, 194, 233, 45, 188, 232, 9, 95, 11, 249, 223, 54, 14, 156, 237, 61, 55, 202, 166, 117, 70, 163, 121, 134, 15, 231, 151, 165, 250, 81, 211, 216, 228, 48, 196, 238, 84, 150, 46, 226, 101, 144, 108, 58, 64, 251, 37, 149, 183, 40, 252, 73, 102, 174, 52, 8, 208, 77, 212, 167, 242, 10, 229, 92, 100, 230, 98, 12, 136, 1, 59, 225, 161, 116, 69, 178, 219, 107, 153, 86, 71, 142, 115, 246, 125, 213, 190, 57, 7, 66, 133, 32, 118, 94, 162, 122, 30, 88, 76, 148, 20, 247, 39, 205, 203, 79, 145, 130, 83, 217, 31, 193, 221, 180, 2, 138, 191, 89, 137, 175, 158, 60, 17, 139, 201, 234, 240, 176, 4, 126, 49, 5, 235, 38, 110, 80, 119, 68, 120, 199, 131, 236, 220, 159, 253, 254, 53, 26, 93, 97, 245, 244, 75, 18, 209, 82, 207, 248, 63, 147, 185, 171, 132, 78, 43, 189, 200, 91, 22, 96, 181, 21, 36, 111, 72, 114, 19, 123, 25, 168, 42, 62, 127, 182 };
     //Запис S-Box'у до файлу та обчислення необхідних параметрів
     FILE *file;
@@ -549,11 +552,11 @@ int main(int args, char **argv) {
     fprintf(file, "\nDelta Uniformity = %d ", res);
     fprintf(file, "\n");
 
-    /*int mdt = differenceTableMax(ar2, size);
+    int mdt = differenceTableMax(ar2, size);
 
     printf("DT MAX = %d ", mdt);
     printf("\n");
-    printf("\n");*/
+    printf("\n");
 
     int LAT = LATMax(ar2, size, n);
 
@@ -588,11 +591,11 @@ int main(int args, char **argv) {
     printf("\nDelta Uniformity = %d ", res);
     printf("\n");
 
-    /*int mdt = differenceTableMax(ar2, size);
+    int mdt = differenceTableMax(ar2, size);
 
     printf("DT MAX = %d ", mdt);
     printf("\n");
-    printf("\n");*/
+    printf("\n");
 
     printf("LAT Max = %d ", LAT);
     printf("\n");
@@ -607,11 +610,41 @@ int main(int args, char **argv) {
     printf("Minimal algebraic degree = %d ", md);
 
     printf("\nAlgebraic Immunity = %d ", ai);
-    printf("\n");
+    printf("\n");*/
 
     //int x = 0x2B;
     //printf("%d ",x);
-    system("PAUSE");
+
+    /*int array[] = {0x63, 0x7c, 0x77, 0x7b, 0xf2, 0x6b, 0x6f, 0xc5, 0x30, 0x01, 0x67, 0x2b, 0xfe, 0xd7, 0xab, 0x76,
+                 0xca, 0x82, 0xc9, 0x7d, 0xfa, 0x59, 0x47, 0xf0, 0xad, 0xd4, 0xa2, 0xaf, 0x9c, 0xa4, 0x72, 0xc0,
+                 0xb7, 0xfd, 0x93, 0x26, 0x36, 0x3f, 0xf7, 0xcc, 0x34, 0xa5, 0xe5, 0xf1, 0x71, 0xd8, 0x31, 0x15,
+                 0x04, 0xc7, 0x23, 0xc3, 0x18, 0x96, 0x05, 0x9a, 0x07, 0x12, 0x80, 0xe2, 0xeb, 0x27, 0xb2, 0x75,
+                 0x09, 0x83, 0x2c, 0x1a, 0x1b, 0x6e, 0x5a, 0xa0, 0x52, 0x3b, 0xd6, 0xb3, 0x29, 0xe3, 0x2f, 0x84,
+                 0x53, 0xd1, 0x00, 0xed, 0x20, 0xfc, 0xb1, 0x5b, 0x6a, 0xcb, 0xbe, 0x39, 0x4a, 0x4c, 0x58, 0xcf,
+                 0xd0, 0xef, 0xaa, 0xfb, 0x43, 0x4d, 0x33, 0x85, 0x45, 0xf9, 0x02, 0x7f, 0x50, 0x3c, 0x9f, 0xa8,
+                 0x51, 0xa3, 0x40, 0x8f, 0x92, 0x9d, 0x38, 0xf5, 0xbc, 0xb6, 0xda, 0x21, 0x10, 0xff, 0xf3, 0xd2,
+                 0xcd, 0x0c, 0x13, 0xec, 0x5f, 0x97, 0x44, 0x17, 0xc4, 0xa7, 0x7e, 0x3d, 0x64, 0x5d, 0x19, 0x73,
+                 0x60, 0x81, 0x4f, 0xdc, 0x22, 0x2a, 0x90, 0x88, 0x46, 0xee, 0xb8, 0x14, 0xde, 0x5e, 0x0b, 0xdb,
+                 0xe0, 0x32, 0x3a, 0x0a, 0x49, 0x06, 0x24, 0x5c, 0xc2, 0xd3, 0xac, 0x62, 0x91, 0x95, 0xe4, 0x79,
+                 0xe7, 0xc8, 0x37, 0x6d, 0x8d, 0xd5, 0x4e, 0xa9, 0x6c, 0x56, 0xf4, 0xea, 0x65, 0x7a, 0xae, 0x08,
+                 0xba, 0x78, 0x25, 0x2e, 0x1c, 0xa6, 0xb4, 0xc6, 0xe8, 0xdd, 0x74, 0x1f, 0x4b, 0xbd, 0x8b, 0x8a,
+                 0x70, 0x3e, 0xb5, 0x66, 0x48, 0x03, 0xf6, 0x0e, 0x61, 0x35, 0x57, 0xb9, 0x86, 0xc1, 0x1d, 0x9e,
+                 0xe1, 0xf8, 0x98, 0x11, 0x69, 0xd9, 0x8e, 0x94, 0x9b, 0x1e, 0x87, 0xe9, 0xce, 0x55, 0x28, 0xdf,
+                 0x8c, 0xa1, 0x89, 0x0d, 0xbf, 0xe6, 0x42, 0x68, 0x41, 0x99, 0x2d, 0x0f, 0xb0, 0x54, 0xbb, 0x16
+    };
+    for (int i = 0; i <256; ++i){
+        printf("%d, ", array[i]);
+    }*/
+
+    //int aesSbox[] = {99, 124, 119, 123, 242, 107, 111, 197, 48, 1, 103, 43, 254, 215, 171, 118, 202, 130, 201, 125, 250, 89, 71, 240, 173, 212, 162, 175, 156, 164, 114, 192, 183, 253, 147, 38, 54, 63, 247, 204, 52, 165, 229, 241, 113, 216, 49, 21, 4, 199, 35, 195, 24, 150, 5, 154, 7, 18, 128, 226, 235, 39, 178, 117, 9, 131, 44, 26, 27, 110, 90, 160, 82, 59, 214, 179, 41, 227, 47, 132, 83, 209, 0, 237, 32, 252, 177, 91, 106, 203, 190, 57, 74, 76, 88, 207, 208, 239, 170, 251, 67, 77, 51, 133, 69, 249, 2, 127, 80, 60, 159, 168, 81, 163, 64, 143, 146, 157, 56, 245, 188, 182, 218, 33, 16, 255, 243, 210, 205, 12, 19, 236, 95, 151, 68, 23, 196, 167, 126, 61, 100, 93, 25, 115, 96, 129, 79, 220, 34, 42, 144, 136, 70, 238, 184, 20, 222, 94,11, 219, 224, 50, 58, 10, 73, 6, 36, 92, 194, 211, 172, 98, 145, 149, 228, 121, 231, 200, 55, 109, 141, 213, 78, 169, 108, 86, 244, 234, 101, 122, 174, 8, 186, 120, 37, 46, 28, 166, 180, 198, 232, 221, 116, 31, 75, 189, 139, 138, 112, 62, 181, 102, 72, 3, 246, 14, 97, 53, 87, 185, 134, 193, 29, 158, 225, 248, 152, 17, 105, 217, 142, 148, 155, 30, 135, 233, 206, 85, 40, 223, 140, 161, 137, 13, 191, 230, 66, 104, 65, 153, 45, 15, 176, 84, 187, 22};
+
+    int arr[] = {4,1,3,5,2,0,7,6};
+
+    int lr = linearRedundancy(arr,8,3);
+
+    //int nl = NLOfSBox(ar2,256,8);
+
+    //system("PAUSE");
 
     //int sbl[] = {3, 106, 87, 164, 169, 243, 112, 241, 109, 0, 128, 135, 90, 16, 129, 44, 28, 34, 157, 103, 35, 113, 143, 67, 172, 33, 210, 104, 24, 222, 152, 65, 23, 105, 51, 195, 204, 160, 74, 224, 179, 239, 218, 215, 197, 85, 56, 41, 27, 29, 198, 99, 186, 141, 155, 47, 140, 124, 170, 13, 206, 6, 177, 173, 146, 154, 214, 184, 187, 192, 227, 50, 255, 194, 233, 45, 188, 232, 9, 95, 11, 249, 223, 54, 14, 156, 237, 61, 55, 202, 166, 117, 70, 163, 121, 134, 15, 231, 151, 165, 250, 81, 211, 216, 228, 48, 196, 238, 84, 150, 46, 226, 101, 144, 108, 58, 64, 251, 37, 149, 183, 40, 252, 73, 102, 174, 52, 8, 208, 77, 212, 167, 242, 10, 229, 92, 100, 230, 98, 12, 136, 1, 59, 225, 161, 116, 69, 178, 219, 107, 153, 86, 71, 142, 115, 246, 125, 213, 190, 57, 7, 66, 133, 32, 118, 94, 162, 122, 30, 88, 76, 148, 20, 247, 39, 205, 203, 79, 145, 130, 83, 217, 31, 193, 221, 180, 2, 138, 191, 89, 137, 175, 158, 60, 17, 139, 201, 234, 240, 176, 4, 126, 49, 5, 235, 38, 110, 80, 119, 68, 120, 199, 131, 236, 220, 159, 253, 254, 53, 26, 93, 97, 245, 244, 75, 18, 209, 82, 207, 248, 63, 147, 185, 171, 132, 78, 43, 189, 200, 91, 22, 96, 181, 21, 36, 111, 72, 114, 19, 123, 25, 168, 42, 62, 127, 182};
 
@@ -1654,10 +1687,11 @@ int *propertiesOfBooleanFunc(int *arr, int size, int count) {
 //Функція знаходження лінійних комбінацій для булевих функцій S-Box'у
 
 int *linearCombinations(const int *arr, int size, int count) {
-    int *result = calloc(size * size, sizeof(int));
+    int *result = calloc(size*(size-1), sizeof(int));
     int *calc = calloc(size, sizeof(int));
+    int *bin = calloc(count, sizeof(int));
     for (int i = 1; i < size; ++i) {
-        int *bin = valueToBinary(i, count);
+        bin = valueToBinary(i, count);
         for (int j = 0, k = count - 1; j < count, k >= 0; ++j, k--) {
             if (bin[k] == 1) {
                 for (int w = 0; w < size; ++w) {
@@ -1681,9 +1715,9 @@ int *linearCombinations(const int *arr, int size, int count) {
             calc[l] = 0;
         }
         //printf("\n");
-        free(bin);
     }
     free(calc);
+    free(bin);
     return result;
 }
 
@@ -2449,5 +2483,107 @@ int numOfCombinations(int n, int d) {
     return numOfCombinations(n - 1, d - 1) + numOfCombinations(n - 1, d);
 }
 
+void bubble_sort(int *data, int size) {
+    int i, j;
+    for (i = 0; i < size; ++i) {
+        for (j = size - 1; j > i; --j) {
+            if (data[j] < data[j-1]) {
+                int t = data[j - 1];
+                data[j - 1] = data[j];
+                data[j] = t;
+            }
+        }
+    }
+}
+
+int *WHTSpectrumForLinearComb(const int *arr, int size, int count) {
+    int *result = calloc(size*(size-1), sizeof(int));
+    int *fxarr = calloc(size, sizeof(int));
+    int *temp = calloc(size, sizeof(int));
+    for (int i = 0; i < size - 1; ++i) {
+        //printf("\nCombination %d", i + 1);
+        for (int j = 0; j < size; ++j) {
+            temp[j] = arr[i * size + j];
+        }
+        fxarr = HadamardCoefficients(temp, size, count);
+        printf("\nHADAMARD COEFFICIENTS");
+        printf("\n");
+        bubble_sort(fxarr,size);
+        for (int q = 0; q < size; ++q) {
+            printf("%d ", fxarr[q]);
+            result[i*size+q] = fxarr[q];
+        }
+        //int *ar = calloc(size, sizeof(int));
+        //ar = autoCorrelation(temp, size, count);
+
+        /*printf("\nAUTO CORRELATING FUNCTION");
+        printf("\n");
+        for (int w = size - 1; w >= 0; w--) {
+            printf("%d ", ar[w]);
+        }
+        printf("\n");*/
+
+        //int AC = autoCorrelationMax(ar, size);
+        //printf("\nAUTO CORRELATION = %d", AC);
+        //printf("\n");
+        //maxAC[i] = AC;
+        //int dec = algebraicDeg(temp, size, count);
+        //printf("\nALGEBRAIC DEGREE = %d ", dec);
+        //printf("\n");
+        //minDEC[i] = dec;
+    }
+    printf("\n");
+    printf("\n");
+    free(fxarr);
+    free(temp);
+    return result;
+}
+
+int linearRedundancy(int *sbox, int size, int count){
+    int result;
+    int *ar1 = SBoxToBooleanFunc(sbox,size,count);
+    int *ar2 = linearCombinations(ar1, size, count);
+    /*int ar3[size-1][size];
+    for (int i = 0; i < size-1; ++i){
+        for(int j = 0; j<size; ++j){
+            ar3[i][j] = ar2[i*size+j];
+            printf("%d ", ar3[i][j]);
+        }
+        printf("\n");
+    }*/
+    int *ar3 = WHTSpectrumForLinearComb(ar2,size,count);
+    /*for (int i = 0; i < size*(size-1); ++i){
+        printf("%d ", ar3[i]);
+    }*/
+    int sp [size-1][size];
+    for (int i = 0; i < size - 1; ++i) {
+        for (int q = 0; q < size; ++q) {
+            sp[i][q] = ar3[i*size+q];
+        }
+    }
+    for (int i = 0; i < size-1; ++i){
+        for(int j = 0; j<size; ++j){
+            printf("%d ", sp[i][j]);
+        }
+        printf("\n");
+    }
+    int innerCounter = 0;
+    for (int i = 0; i < size-1; ++i) {
+        for (int h = 0; h < size-1; ++h) {
+            for (int j = 0; j < size; ++j) {
+                if (sp[i][j] == sp[h][j]) {
+                    innerCounter++;
+                }
+            }
+            if (innerCounter == size){
+                printf("\nSTRINGS ARE EQUAL");
+            }
+        }
+    }
+    free(ar1);
+    free(ar2);
+    free(ar3);
+    return result;
+}
 
 
