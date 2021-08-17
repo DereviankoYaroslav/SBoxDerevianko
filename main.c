@@ -666,9 +666,9 @@ int main(int args, char **argv) {
     int ar2[] = {30, 43, 217, 136, 160, 233, 123, 179, 111, 93, 184, 114, 241, 4, 149, 107, 251, 21, 226, 131, 99, 25, 6, 48, 180, 186, 61, 7, 134, 191, 249, 109, 177, 23, 198, 105, 78, 183, 141, 89, 253, 68, 192, 90, 60, 49, 39, 240, 101, 225, 98, 63, 210, 77, 207, 120, 124, 129, 147, 162, 176, 11, 250, 59, 148, 37, 199, 9, 92, 34, 248, 53, 24, 62, 151, 238, 138, 82, 224, 26, 178, 44, 29, 206, 95, 132, 18, 128, 33, 185, 212, 236, 223, 169, 71, 170, 254, 219, 188, 156, 14, 182, 211, 31, 86, 166, 234, 244, 171, 116, 3, 252, 1, 193, 140, 13, 133, 126, 110, 35, 103, 139, 201, 173, 66, 167, 209, 158, 117, 70, 222, 119, 175, 174, 200, 81, 17, 146, 46, 232, 67, 87, 214, 230, 51, 181, 32, 115, 135, 55, 72, 157, 122, 45, 22, 10, 79, 15, 50, 187, 102, 83, 41, 216, 194, 229, 88, 12, 227, 57, 125, 19, 54, 190, 127, 94, 220, 197, 144, 242, 85, 208, 73, 189, 163, 16, 152, 243, 239, 96, 106, 36, 64, 245, 161, 47, 97, 150, 113, 213, 56, 130, 100, 27, 165, 215, 195, 143, 20, 58, 108, 52, 74, 218, 69, 2, 153, 145, 5, 38, 205, 203, 65, 235, 204, 247, 172, 80, 121, 28, 202, 246, 142, 228, 0, 91, 8, 104, 221, 155, 255, 75, 137, 40, 168, 118, 154, 196, 42, 76, 159, 84, 164, 231, 112, 237};
 
 
-    //int lr = linearRedundancy(aesSbox,256,8);
+    int lr = linearRedundancy(aesSbox,256,8);
 
-    int arr1[] = {0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0,
+    /*int arr1[] = {0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0,
                   1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0,
                   0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0,
                   1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0,
@@ -716,16 +716,15 @@ int main(int args, char **argv) {
     int *ac2 = autoCorrelation(arr2, 256, 8);
     int AC2 = autoCorrelationMax(ac2,256);
     printf("AC2 = %d ", AC2);
-    printf("\n");
+    printf("\n");*/
 
-    int f[] = {0,0,1,0,1,0,1,1};
-    int *ac3 = autoCorrelation(f, 8, 3);
-    int AC3 = autoCorrelationMax(ac3,3);
-    printf("AC3 = %d ", AC3);
-    printf("\n");
+    printf("LR = %d ", lr);
+    /*int f[] = {1,0,1,1};
+    int *ac1 = HadamardCoefficients(f, 4, 2);
+    for (int i = 0; i < 4; ++i){
+        printf("%d ", ac1[i]);
+    }*/
 
-
-    //printf("LR = %d ", lr);
 
     //int nl = NLOfSBox(ar2,256,8);
 
@@ -1164,6 +1163,7 @@ int autoCorrelationMax(const int *arr, int size) {
     int maxCoefficient = abs(arr[1]);
     for (int i = 1; i < size; ++i) {
         if (abs(arr[i]) > maxCoefficient) {
+            //printf("%d", arr[i]);
             maxCoefficient = abs(arr[i]);
         }
     }
@@ -2600,6 +2600,9 @@ int *WHTSpectrumForLinearComb(const int *arr, int size, int count) {
             //printf("%d ", temp[j]);
         }
         fxarr = HadamardCoefficients(temp, size, count);
+        for (int g = 0; g< size; ++g){
+            fxarr[g] = abs(fxarr[g]);
+        }
         //printf("\nHADAMARD COEFFICIENTS");
         //printf("\n");
         bubble_sort(fxarr,size);
@@ -2614,7 +2617,7 @@ int *WHTSpectrumForLinearComb(const int *arr, int size, int count) {
 }
 
 int *ACForLinearComb(const int *arr, int size, int count) {
-    int *result = calloc(size-1, sizeof(int));
+    int *result = calloc(size*(size-1), sizeof(int));
     int *temp = calloc(size, sizeof(int));
     int *ar = calloc(size, sizeof(int));
     for (int i = 0; i < size - 1; ++i) {
@@ -2625,17 +2628,15 @@ int *ACForLinearComb(const int *arr, int size, int count) {
         }
         ar = autoCorrelation(temp, size, count);
 
-        /*printf("\nAUTO CORRELATING FUNCTION");
-        printf("\n");
-        for (int w = size - 1; w >= 0; w--) {
-            printf("%d ", ar[w]);
+        for (int g = 0; g< size; ++g){
+            ar[g] = abs(ar[g]);
         }
-        printf("\n");*/
-        int AC = autoCorrelationMax(ar, size);
-        //printf("\nAUTO CORRELATION = %d", AC);
-        //printf("\n");
-        //maxAC[i] = AC;
-       result[i] = AC;
+
+        bubble_sort(ar,size);
+        for (int q = 0; q < size; ++q) {
+            //printf("%d ", fxarr[q]);
+            result[i*size+q] = ar[q];
+        }
     }
     free(ar);
     free(temp);
@@ -2665,21 +2666,13 @@ int linearRedundancy(int *sbox, int size, int count){
     int result;
     int *ar1 = SBoxToBooleanFunc(sbox,size,count);
     int *ar2 = linearCombinations(ar1, size, count);
-    int *ar4 = calloc((size-1),sizeof(int));
     int *ar5 = calloc((size-1),sizeof(int));
     int ar33[size-1][size];
-    /*for (int i = 0; i < size-1; ++i){
-        for(int j = 0; j<size; ++j){
-            ar33[i][j] = ar2[i*size+j];
-            printf("%d, ", ar33[i][j]);
-        }
-        printf("\n");
-    }*/
     int *ar3 = WHTSpectrumForLinearComb(ar2,size,count);
     /*for (int i = 0; i < size*(size-1); ++i){
         printf("%d ", ar3[i]);
     }*/
-    ar4 = ACForLinearComb(ar2,size,count);
+    int *ar4 = ACForLinearComb(ar2,size,count);
     ar5 = DegForLinearComb(ar2,size,count);
     int sp [size-1][size];
     for (int i = 0; i < size - 1; ++i) {
@@ -2687,18 +2680,58 @@ int linearRedundancy(int *sbox, int size, int count){
             sp[i][q] = ar3[i*size+q];
         }
     }
-    /*for (int i = 0; i < size-1; ++i){
+    int ac [size-1][size];
+    for (int i = 0; i < size - 1; ++i) {
+        for (int q = 0; q < size; ++q) {
+            ac[i][q] = ar4[i*size+q];
+        }
+    }
+    int dg [size-1];
+    for (int i = 0; i < size - 1; ++i) {
+        dg[i] = ar5[i];
+    }
+    FILE *file;
+    fopen_s(&file, "Linear comb and WHT Spectrum.txt", "w");
+    if (file == NULL) {
+        printf("ERROR: Can't save sbox to file!\n");
+        for (;;);
+    }
+    fprintf(file, "\n");
+    for (int i = 0; i < size-1; ++i){
+        fprintf(file,"\nLINEAR COMBINATION\n");
+        for(int j = 0; j<size; ++j){
+            ar33[i][j] = ar2[i*size+j];
+            fprintf(file,"%d, ", ar33[i][j]);;
+        }
+        fprintf(file,"\n");
+        fprintf(file,"\nHADAMARD SPECTRUM\n");
+        for(int k = 0; k<size; ++k){
+            fprintf(file,"%d ", sp[i][k]);
+        }
+        fprintf(file,"\n");
+    }
+    fprintf(file, "\n");
+    fclose(file);
+
+    printf("\nHADAMARD SPECTRUM\n");
+    for (int i = 0; i < size-1; ++i){
         for(int j = 0; j<size; ++j){
             printf("%d ", sp[i][j]);
         }
         printf("\n");
     }
+    printf("\nAUTO CORRELATION FUNCTIONS\n");
     for (int i = 0; i < size-1; ++i){
-        printf("%d ", ar4[i]);
+        for(int j = 0; j<size; ++j){
+            printf("%d ", ac[i][j]);
+        }
+        printf("\n");
     }
+    printf("\nDEGREES\n");
     for (int i = 0; i < size-1; ++i){
-        printf("%d ", ar5[i]);
-    }*/
+        printf("%d ", dg[i]);
+    }
+    printf("\n");
     int innerCounter = 0;
     int OuterCounter = 0;
     int finalCounter = 0;
@@ -2706,7 +2739,7 @@ int linearRedundancy(int *sbox, int size, int count){
         for (int h = i+1; h < size-1; ++h) {
             for (int j = 0; j < size; ++j) {
                 if (i!=h) {
-                    if (sp[i][j] == sp[h][j] && sp[h][j] != -99999) {
+                    if ((sp[i][j] == sp[h][j] && sp[h][j] != -99999) && (ac[i][j] == ac[h][j] && ac[h][j] != -99999) /*&& (dg[i] == dg[h] && dg[h] != -99999)*/) {
                         innerCounter++;
                     }
                 }
@@ -2723,22 +2756,28 @@ int linearRedundancy(int *sbox, int size, int count){
             }*/
             if (innerCounter == size){
                 //if (i!=h) {
-                    //if (ar4[i]==ar4[h] && ar5[i] == ar5[h]) {
-                        //printf("\nSTRINGS ARE EQUAL");
-                        OuterCounter++;
-                        for (int j = 0; j < size; ++j) {
-                            sp[h][j] = -99999;
-                        }
-                    //}
+                //if (ar4[i]==ar4[h] && ar5[i] == ar5[h]) {
+                //printf("\nSTRINGS ARE EQUAL");
+                OuterCounter++;
+                for (int j = 0; j < size; ++j) {
+                    sp[h][j] = -99999;
+                    ac[h][j] = -99999;
+                    dg[h] = -99999;
+                }
+                //}
                 //}
             }
             innerCounter = 0;
         }
-        for (int j = 0; j < size; ++j){
+        /*for (int j = 0; j < size; ++j){
             sp[i][j] = -99999;
-        }
+            ac[i][j] = -99999;
+            dg[i] = -99999;
+        }*/
         //printf("\nOC ==%d ", OuterCounter);
-        finalCounter = finalCounter+OuterCounter;
+        if (OuterCounter > 0) {
+            finalCounter++;
+        }
         OuterCounter = 0;
     }
     //printf("\nFINAL ==%d ", finalCounter);
