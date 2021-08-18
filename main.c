@@ -642,6 +642,8 @@ int main(int args, char **argv) {
 
     int arr[] = {4,1,3,5,2,0,7,6};
 
+    int ar[] = {14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7};
+
     /*int ar2[] = {0x1E, 0x2B, 0xD9, 0x88, 0xA0, 0xE9, 0x7B, 0xB3, 0x6F, 0x5D, 0xB8, 0x72, 0xF1, 0x04, 0x95, 0x6B,
     0xFB, 0x15, 0xE2, 0x83, 0x63, 0x19, 0x06, 0x30, 0xB4, 0xBA, 0x3D, 0x07, 0x86, 0xBF, 0xF9, 0x6D,
     0xB1, 0x17, 0xC6, 0x69, 0x4E, 0xB7, 0x8D, 0x59, 0xFD, 0x44, 0xC0, 0x5A, 0x3C, 0x31, 0x27, 0xF0,
@@ -666,7 +668,7 @@ int main(int args, char **argv) {
     int ar2[] = {30, 43, 217, 136, 160, 233, 123, 179, 111, 93, 184, 114, 241, 4, 149, 107, 251, 21, 226, 131, 99, 25, 6, 48, 180, 186, 61, 7, 134, 191, 249, 109, 177, 23, 198, 105, 78, 183, 141, 89, 253, 68, 192, 90, 60, 49, 39, 240, 101, 225, 98, 63, 210, 77, 207, 120, 124, 129, 147, 162, 176, 11, 250, 59, 148, 37, 199, 9, 92, 34, 248, 53, 24, 62, 151, 238, 138, 82, 224, 26, 178, 44, 29, 206, 95, 132, 18, 128, 33, 185, 212, 236, 223, 169, 71, 170, 254, 219, 188, 156, 14, 182, 211, 31, 86, 166, 234, 244, 171, 116, 3, 252, 1, 193, 140, 13, 133, 126, 110, 35, 103, 139, 201, 173, 66, 167, 209, 158, 117, 70, 222, 119, 175, 174, 200, 81, 17, 146, 46, 232, 67, 87, 214, 230, 51, 181, 32, 115, 135, 55, 72, 157, 122, 45, 22, 10, 79, 15, 50, 187, 102, 83, 41, 216, 194, 229, 88, 12, 227, 57, 125, 19, 54, 190, 127, 94, 220, 197, 144, 242, 85, 208, 73, 189, 163, 16, 152, 243, 239, 96, 106, 36, 64, 245, 161, 47, 97, 150, 113, 213, 56, 130, 100, 27, 165, 215, 195, 143, 20, 58, 108, 52, 74, 218, 69, 2, 153, 145, 5, 38, 205, 203, 65, 235, 204, 247, 172, 80, 121, 28, 202, 246, 142, 228, 0, 91, 8, 104, 221, 155, 255, 75, 137, 40, 168, 118, 154, 196, 42, 76, 159, 84, 164, 231, 112, 237};
 
 
-    int lr = linearRedundancy(ar2,256,8);
+    int lr = linearRedundancy(ar,16,4);
 
     /*int arr1[] = {0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0,
                   1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0,
@@ -718,7 +720,7 @@ int main(int args, char **argv) {
     printf("AC2 = %d ", AC2);
     printf("\n");*/
 
-    printf("LR = %d ", lr);
+    printf("\nLinear Redundancy = %d \n", lr);
     /*int f[] = {1,0,1,1};
     int *ac1 = HadamardCoefficients(f, 4, 2);
     for (int i = 0; i < 4; ++i){
@@ -2739,12 +2741,12 @@ int linearRedundancy(int *sbox, int size, int count){
         for (int h = i+1; h < size-1; ++h) {
             for (int j = 0; j < size; ++j) {
                 if (i!=h) {
-                    if (/*sp[i][j] == sp[h][j] && sp[h][j] != -99999)*/(ac[i][j] == ac[h][j] && ac[h][j] != -99999) /*(dg[i] == dg[h] && dg[h] != -99999)*/) {
+                    if (sp[i][j] == sp[h][j] && sp[h][j] != -999 || (ac[i][j] == ac[h][j] && ac[h][j] != -999) /* (dg[i] == dg[h] && dg[h] != -999)*/) {
                         innerCounter++;
                     }
                 }
             }
-            printf("\nInner counter = %d %d %d", i, h,innerCounter);
+            //printf("\nInner counter = %d %d %d", i, h,innerCounter);
             /*printf("\n");
             printf("\n");
             for (int j = 0; j < size; ++j){
@@ -2759,12 +2761,12 @@ int linearRedundancy(int *sbox, int size, int count){
                 //if (i!=h) {
                 //if (ar4[i]==ar4[h] && ar5[i] == ar5[h]) {
                 //printf("\nSTRINGS ARE EQUAL");
-                dg[h] = -99999;
+                dg[h] = -999;
                 OuterCounter++;
                 for (int j = 0; j < size; ++j) {
-                    sp[h][j] = -99999;
-                    ac[h][j] = -99999;
-                    //dg[h] = -99999;
+                    sp[h][j] = -999;
+                    ac[h][j] = -999;
+                    //dg[h] = -999;
                 }
                 //}
                 //}
@@ -2772,18 +2774,36 @@ int linearRedundancy(int *sbox, int size, int count){
             innerCounter = 0;
         }
         /*for (int j = 0; j < size; ++j){
-            sp[i][j] = -99999;
-            ac[i][j] = -99999;
-            dg[i] = -99999;
+            sp[i][j] = -999;
+            ac[i][j] = -999;
+            dg[i] = -999;
         }*/
-        printf("\nOC ==%d ", OuterCounter);
+        //printf("\nOC ==%d ", OuterCounter);
     }
+    printf("\nHADAMARD SPECTRUM AFTER\n");
+    for (int i = 0; i < size-1; ++i){
+        for(int j = 0; j<size; ++j){
+            printf("%d ", sp[i][j]);
+        }
+        printf("\n");
+    }
+    printf("\nAUTO CORRELATION FUNCTIONS AFTER\n");
+    for (int i = 0; i < size-1; ++i){
+        for(int j = 0; j<size; ++j){
+            printf("%d ", ac[i][j]);
+        }
+        printf("\n");
+    }
+    /*printf("\nDEGREES AFTER\n");
+    for (int i = 0; i < size-1; ++i){
+        printf("%d ", dg[i]);
+    }*/
     finalCounter = finalCounter+OuterCounter;
     //printf("\nFINAL ==%d ", finalCounter);
     free(ar1);
     free(ar2);
     free(ar3);
-    result = (size-1) - finalCounter;
+    result = finalCounter;
     return result;
 }
 
