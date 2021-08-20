@@ -721,44 +721,46 @@ int main(int args, char **argv) {
 
     //int ar2[] = {130, 211, 33, 31, 149, 220, 78, 134, 90, 104, 141, 71, 196, 49, 160, 94, 206, 32, 215, 182, 86, 44, 51, 5, 129, 143, 8, 50, 179, 138, 204, 88, 132, 34, 243, 92, 123, 30, 184, 108, 200, 113, 245, 111, 9, 4, 18, 197, 80, 212, 87, 10, 231, 120, 250, 77, 73, 180, 166, 151, 133, 62, 207, 14, 161, 16, 242, 60, 105, 23, 205, 0, 45, 11, 162, 219, 191, 103, 213, 47, 135, 25, 40, 251, 106, 177, 39, 181, 20, 140, 225, 217, 234, 156, 114, 159, 203, 238, 137, 169, 59, 131, 230, 42, 99, 147, 223, 193, 158, 65, 54, 201, 52, 244, 185, 56, 176, 75, 91, 22, 82, 190, 252, 152, 119, 146, 228, 171, 64, 115, 235, 66, 154, 155, 253, 100, 36, 167, 27, 221, 118, 98, 227, 236, 6, 128, 21, 70, 178, 2, 125, 168, 79, 24, 35, 63, 122, 58, 7, 142, 83, 102, 28, 237, 247, 208, 109, 57, 214, 12, 72, 38, 3, 139, 74, 107, 233, 240, 165, 199, 96, 229, 124, 136, 150, 37, 173, 198, 218, 85, 95, 17, 117, 192, 148, 26, 84, 163, 68, 224, 13, 183, 81, 46, 144, 226, 246, 186, 189, 15, 89, 1, 127, 239, 112, 55, 172, 164, 48, 19, 248, 254, 116, 222, 249,194, 153, 101, 76, 41, 255, 195, 187, 209, 53, 110, 61, 93, 232, 174, 202, 126, 188, 29, 157, 67, 175, 241, 43, 121, 170, 97, 145, 210, 69, 216};
 
-    FILE *file;
-    fopen_s(&file, "Generated S-boxes.txt", "a");
-    if (file == NULL) {
-        printf("ERROR: Can't save sbox to file!\n");
-        for (;;);
-    }
+    int uc = 255;
     int lr = 0;
+    int flag = 0;
+    int counter = 0;
 
-    int counter = 1;
+    n = 8;
+    size = raiseToPower(2, n);
 
-    while (lr == 0) {
+    int *ar2 = calloc(size, sizeof(int));
 
-        int *ar2 = SBoxGeneratingDec(8, 8);
+    while (counter < 1000) {
 
-        fprintf(file, "\n");
-        fprintf(file, "\nS-BOX NUMBER %d \n", counter);
-        for (int i = 0; i < 256; i++) {
-            fprintf(file, "%d, ", ar2[i]);
+        ar2 = SBoxGeneratingDec(8, 8);
+
+        printf("\n");
+        printf( "\nS-BOX\n");
+        for (int i = 0; i < 256; ++i) {
+            printf("%d, ", ar2[i]);
         }
-        fprintf(file, "\n");
+        printf("\n");
 
-        int uc = linearRedundancy(ar2, 256, 8);
+        uc = linearRedundancy(ar2, 256, 8);
+        if (uc != 255){
+            flag++;
+        }
 
-        fprintf(file, "\nUniq linear functions = %d \n", uc);
+        printf( "\nUniq linear functions = %d \n", uc);
         if (uc > 1) {
             lr = (size - 1) - uc;
-            fprintf(file, "\nLinear redundancy = %d \n", lr);
+            printf( "\nLinear redundancy = %d \n", lr);
         }
         if (uc == 1) {
             lr = (size) - uc;
-            fprintf(file, "\nLinear redundancy = %d \n", lr);
+            printf("\nLinear redundancy = %d \n", lr);
         }
-        fprintf(file, "\n____________________________________________________________________\n");
+        printf("\n____________________________________________________________________\n");
         counter++;
-        free(ar2);
     }
-    fclose(file);
-
+    printf("\nS-box with not zero redundancy -  %d \n", flag);
+    free(ar2);
 
     /*int arr1[] = {0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0,
                   1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0,
@@ -892,13 +894,14 @@ int myModulus(int number, int mod) {
 
 int *binaryElements(int *arr, int size, int count) {
     int *result = calloc(size * count, sizeof(int));
+    int *bin = calloc(count, sizeof(int));
     for (int i = 0; i < size; ++i) {
-        int *bin = valueToBinary(arr[i], count);
+        bin = valueToBinary(arr[i], count);
         for (int j = 0, k = count - 1; j < count; ++j, k--) {
             result[j * size + i] = bin[k];
         }
-        free(bin);
     }
+    free(bin);
     return result;
 }
 
@@ -1165,12 +1168,13 @@ int *HadamardCoefficients(const int *func, int size, int count) {
     int *result = calloc(size, sizeof(int));
     int *test = calloc(size * count, sizeof(int));
     int *functions2 = elemsForN(size);
+    int *bin = calloc(count, sizeof(int));
     /*for (int i = 0; i < size; ++i) {
         printf(" %d",functions2 [i]);
     }*/
     //printf("\n");
     for (int i = 0; i < size; ++i) {
-        int *bin = valueToBinary(functions2[i], count);
+        bin = valueToBinary(functions2[i], count);
         for (int j = 0; j < count; ++j) {
             //printf(" bin j = %d", bin[j]);
             //*(functions + i * cols + j) = (i >> cols - j - 1) & 1u;
@@ -1178,7 +1182,6 @@ int *HadamardCoefficients(const int *func, int size, int count) {
             //printf(" %d",test [i * count + j]);
         }
         //printf("\n");
-        free(bin);
     }
     int *w = calloc(count, sizeof(int));
     for (int i = 0; i < size; ++i) {
@@ -1196,6 +1199,7 @@ int *HadamardCoefficients(const int *func, int size, int count) {
         }
         result[i] = res;
     }
+    free(bin);
     free(test);
     free(functions2);
     free(w);
@@ -1234,17 +1238,18 @@ int *autoCorrelation(int *func, int size, int count) {
         //printf("\npf2= %d", polFunc2[i]);
     }
     acFunc[0] = raiseToPower(2, count);
-    for (int i = 1; i < size; ++i) {
+    for (int f = 1; f < size; ++f) {
         for (int j = 0; j < size; ++j) {
-            temp = polFunc2[j] * polFunc2[j ^ i];
+            temp = polFunc2[j] * polFunc2[j ^ f];
             //printf("\nj = %d", j);
             //printf("\nj^i = %d", j^i);
             //printf("\ntemp= %d", temp);
-            acFunc[i] = acFunc[i] + temp;
+            acFunc[f] = acFunc[f] + temp;
         }
         //printf("ac i = %d", acFunc[i]);
     }
     free(polFunc);
+    free(polFunc2);
     return acFunc;
 }
 
@@ -2709,28 +2714,31 @@ int *WHTSpectrumForLinearComb(const int *arr, int size, int count) {
 
 int *ACForLinearComb(const int *arr, int size, int count) {
     int *result = calloc(size*(size-1), sizeof(int));
-    int *temp = calloc(size, sizeof(int));
-    int *ar = calloc(size, sizeof(int));
     for (int i = 0; i < size - 1; ++i) {
+        int *temp = calloc(size, sizeof(int));
         //printf("\nCombination %d", i + 1);
         for (int j = 0; j < size; ++j) {
             temp[j] = arr[i * size + j];
             //printf("%d ", temp[j]);
         }
+        int *ar = calloc(size, sizeof(int));
+        printf("\nAC1");
         ar = autoCorrelation(temp, size, count);
+        printf("\nAC2");
 
         for (int g = 0; g< size; ++g){
             ar[g] = abs(ar[g]);
         }
 
         bubble_sort(ar,size);
+        printf("\nAC3");
         for (int q = 0; q < size; ++q) {
             //printf("%d ", fxarr[q]);
             result[i*size+q] = ar[q];
         }
+        free(ar);
+        free(temp);
     }
-    free(ar);
-    free(temp);
     return result;
 }
 
@@ -2756,15 +2764,19 @@ int *DegForLinearComb(const int *arr, int size, int count) {
 int linearRedundancy(int *sbox, int size, int count){
     int result;
     int *ar1 = SBoxToBooleanFunc(sbox,size,count);
+    printf("\n1");
     int *ar2 = linearCombinations(ar1, size, count);
-    int *ar5 = calloc((size-1),sizeof(int));
+    printf("\n2");
+    //int *ar5 = calloc((size-1),sizeof(int));
     int ar33[size-1][size];
     int *ar3 = WHTSpectrumForLinearComb(ar2,size,count);
+    printf("\n3");
     /*for (int i = 0; i < size*(size-1); ++i){
         printf("%d ", ar3[i]);
     }*/
     int *ar4 = ACForLinearComb(ar2,size,count);
-    ar5 = DegForLinearComb(ar2,size,count);
+    printf("\n4");
+    //ar5 = DegForLinearComb(ar2,size,count);
     int sp [size-1][size];
     for (int i = 0; i < size - 1; ++i) {
         for (int q = 0; q < size; ++q) {
@@ -2777,11 +2789,11 @@ int linearRedundancy(int *sbox, int size, int count){
             ac[i][q] = ar4[i*size+q];
         }
     }
-    int dg [size-1];
+    /*int dg [size-1];
     for (int i = 0; i < size - 1; ++i) {
         dg[i] = ar5[i];
-    }
-    FILE *file;
+    }*/
+    /*FILE *file;
     fopen_s(&file, "Linear comb and WHT Spectrum.txt", "w");
     if (file == NULL) {
         printf("ERROR: Can't save sbox to file!\n");
@@ -2802,7 +2814,7 @@ int linearRedundancy(int *sbox, int size, int count){
         fprintf(file,"\n");
     }
     fprintf(file, "\n");
-    fclose(file);
+    fclose(file);*/
 
     /*printf("\nHADAMARD SPECTRUM\n");
     for (int i = 0; i < size-1; ++i){
@@ -2850,7 +2862,7 @@ int linearRedundancy(int *sbox, int size, int count){
                 //if (i!=h) {
                 //if (ar4[i]==ar4[h] && ar5[i] == ar5[h]) {
                 //printf("\nSTRINGS ARE EQUAL");
-                dg[h] = -999;
+                //dg[h] = -999;
                 OuterCounter++;
                 for (int j = 0; j < size; ++j) {
                     sp[h][j] = -999;
@@ -2893,7 +2905,6 @@ int linearRedundancy(int *sbox, int size, int count){
     free(ar2);
     free(ar3);
     free(ar4);
-    free(ar5);
     result = (size-1) - finalCounter;
     return result;
 }
@@ -2917,11 +2928,11 @@ int *SBoxGeneratingDec(int n, int m) {
             i++;
         }
     }
-    printf("Generated s-box: ");
+    /*printf("Generated s-box: ");
     for (int i = 0; i < size; ++i) {
-        printf("%d ,", dec[i]);
-    }
-    printf("\n");
+        printf("%d, ", dec[i]);
+    }*/
+    //printf("\n");
     return dec;
 }
 
