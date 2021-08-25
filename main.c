@@ -735,7 +735,7 @@ int main(int args, char **argv) {
     int sp [size-1][size];
     int ac [size-1][size];
 
-    while (1) {
+    while (counter < 10000) {
 
         int *ar2 = SBoxGeneratingDec(8, 8);
 
@@ -760,6 +760,10 @@ int main(int args, char **argv) {
         fprintf(file, "\n____________________________________________________________________\n");
         counter++;
         free(ar2);
+        if (lr != 0){
+            fprintf(file, "\nNO ZERO REDUNDANCY IS FOUND\n");
+            break;
+        }
     }
     fclose(file);
 
