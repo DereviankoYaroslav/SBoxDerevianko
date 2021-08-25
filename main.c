@@ -732,21 +732,21 @@ int main(int args, char **argv) {
 
     int counter = 1;
 
-    //int sp [size-1][size];
-    //int ac [size-1][size];
+    int sp [size-1][size];
+    int ac [size-1][size];
 
     while (1) {
 
         int *ar2 = SBoxGeneratingDec(8, 8);
 
-        /*fprintf(file, "\n");
-        fprintf(file, "\nS-BOX NUMBER %d ");
+        fprintf(file, "\n");
+        fprintf(file, "\nS-BOX NUMBER %d ", counter);
         for (int i = 0; i < 256; i++) {
             fprintf(file, "%d, ", ar2[i]);
         }
-        fprintf(file, "\n");*/
+        fprintf(file, "\n");
 
-        /*int uc = linearRedundancy(ar2, 256, 8, sp,ac);
+        int uc = linearRedundancy(ar2, 256, 8, sp,ac);
 
         fprintf(file, "\nUniq linear functions = %d \n", uc);
         if (uc > 1) {
@@ -756,9 +756,9 @@ int main(int args, char **argv) {
         if (uc == 1) {
             lr = (size) - uc;
             fprintf(file, "\nLinear redundancy = %d \n", lr);
-        }*/
-        //fprintf(file, "\n____________________________________________________________________\n");
-        //counter++;
+        }
+        fprintf(file, "\n____________________________________________________________________\n");
+        counter++;
         free(ar2);
     }
     fclose(file);
@@ -864,7 +864,7 @@ int main(int args, char **argv) {
 
     //int nl = NLOfSBox(ar2,256,8);
 
-    //system("PAUSE");
+    system("PAUSE");
 
     //int sbl[] = {3, 106, 87, 164, 169, 243, 112, 241, 109, 0, 128, 135, 90, 16, 129, 44, 28, 34, 157, 103, 35, 113, 143, 67, 172, 33, 210, 104, 24, 222, 152, 65, 23, 105, 51, 195, 204, 160, 74, 224, 179, 239, 218, 215, 197, 85, 56, 41, 27, 29, 198, 99, 186, 141, 155, 47, 140, 124, 170, 13, 206, 6, 177, 173, 146, 154, 214, 184, 187, 192, 227, 50, 255, 194, 233, 45, 188, 232, 9, 95, 11, 249, 223, 54, 14, 156, 237, 61, 55, 202, 166, 117, 70, 163, 121, 134, 15, 231, 151, 165, 250, 81, 211, 216, 228, 48, 196, 238, 84, 150, 46, 226, 101, 144, 108, 58, 64, 251, 37, 149, 183, 40, 252, 73, 102, 174, 52, 8, 208, 77, 212, 167, 242, 10, 229, 92, 100, 230, 98, 12, 136, 1, 59, 225, 161, 116, 69, 178, 219, 107, 153, 86, 71, 142, 115, 246, 125, 213, 190, 57, 7, 66, 133, 32, 118, 94, 162, 122, 30, 88, 76, 148, 20, 247, 39, 205, 203, 79, 145, 130, 83, 217, 31, 193, 221, 180, 2, 138, 191, 89, 137, 175, 158, 60, 17, 139, 201, 234, 240, 176, 4, 126, 49, 5, 235, 38, 110, 80, 119, 68, 120, 199, 131, 236, 220, 159, 253, 254, 53, 26, 93, 97, 245, 244, 75, 18, 209, 82, 207, 248, 63, 147, 185, 171, 132, 78, 43, 189, 200, 91, 22, 96, 181, 21, 36, 111, 72, 114, 19, 123, 25, 168, 42, 62, 127, 182};
 
@@ -937,14 +937,13 @@ int myModulus(int number, int mod) {
 
 int *binaryElements(int *arr, int size, int count) {
     int *result = calloc(size * count, sizeof(int));
-    int *bin = calloc(count, sizeof(int));
     for (int i = 0; i < size; ++i) {
-        bin = valueToBinary(arr[i], count);
+        int *bin = valueToBinary(arr[i], count);
         for (int j = 0, k = count - 1; j < count; ++j, k--) {
             result[j * size + i] = bin[k];
         }
+        free(bin);
     }
-    free(bin);
     return result;
 }
 
@@ -1211,13 +1210,12 @@ int *HadamardCoefficients(const int *func, int size, int count) {
     int *result = calloc(size, sizeof(int));
     int *test = calloc(size * count, sizeof(int));
     int *functions2 = elemsForN(size);
-    int *bin = calloc(count, sizeof(int));
     /*for (int i = 0; i < size; ++i) {
         printf(" %d",functions2 [i]);
     }*/
     //printf("\n");
     for (int i = 0; i < size; ++i) {
-        bin = valueToBinary(functions2[i], count);
+        int *bin = valueToBinary(functions2[i], count);
         for (int j = 0; j < count; ++j) {
             //printf(" bin j = %d", bin[j]);
             //*(functions + i * cols + j) = (i >> cols - j - 1) & 1u;
@@ -1225,6 +1223,7 @@ int *HadamardCoefficients(const int *func, int size, int count) {
             //printf(" %d",test [i * count + j]);
         }
         //printf("\n");
+        free(bin);
     }
     int *w = calloc(count, sizeof(int));
     for (int i = 0; i < size; ++i) {
@@ -1242,7 +1241,6 @@ int *HadamardCoefficients(const int *func, int size, int count) {
         }
         result[i] = res;
     }
-    free(bin);
     free(test);
     free(functions2);
     free(w);
@@ -1921,9 +1919,8 @@ int *propertiesOfBooleanFunc(int *arr, int size, int count) {
 int *linearCombinations(const int *arr, int size, int count) {
     int *result = calloc(size*(size-1), sizeof(int));
     int *calc = calloc(size, sizeof(int));
-    int *bin = calloc(count, sizeof(int));
     for (int i = 1; i < size; ++i) {
-        bin = valueToBinary(i, count);
+        int *bin = valueToBinary(i, count);
         for (int j = 0, k = count - 1; j < count, k >= 0; ++j, k--) {
             if (bin[k] == 1) {
                 for (int w = 0; w < size; ++w) {
@@ -1947,9 +1944,9 @@ int *linearCombinations(const int *arr, int size, int count) {
             calc[l] = 0;
         }
         //printf("\n");
+        free(bin);
     }
     free(calc);
-    free(bin);
     return result;
 }
 
@@ -2730,7 +2727,6 @@ void bubble_sort(int *data, int size) {
 
 int *WHTSpectrumForLinearComb(const int *arr, int size, int count) {
     int *result = calloc(size*(size-1), sizeof(int));
-    int *fxarr = calloc(size, sizeof(int));
     int *temp = calloc(size, sizeof(int));
     for (int i = 0; i < size - 1; ++i) {
         //printf("\nCombination %d", i + 1);
@@ -2738,7 +2734,7 @@ int *WHTSpectrumForLinearComb(const int *arr, int size, int count) {
             temp[j] = arr[i * size + j];
             //printf("%d ", temp[j]);
         }
-        fxarr = HadamardCoefficients(temp, size, count);
+        int *fxarr = HadamardCoefficients(temp, size, count);
         bubble_sort(fxarr,size);
         for (int g = 0; g< size; ++g){
             fxarr[g] = abs(fxarr[g]);
@@ -2750,23 +2746,22 @@ int *WHTSpectrumForLinearComb(const int *arr, int size, int count) {
             //printf("%d ", fxarr[q]);
             result[i*size+q] = fxarr[q];
         }*/
+        free(fxarr);
     }
-    free(fxarr);
     free(temp);
     return result;
 }
 
 int *ACForLinearComb(const int *arr, int size, int count) {
     int *result = calloc(size*(size-1), sizeof(int));
+    int *temp = calloc(size, sizeof(int));
     for (int i = 0; i < size - 1; ++i) {
-        int *temp = calloc(size, sizeof(int));
         //printf("\nCombination %d", i + 1);
         for (int j = 0; j < size; ++j) {
             temp[j] = arr[i * size + j];
             //printf("%d ", temp[j]);
         }
-        int *ar = calloc(size, sizeof(int));
-        ar = autoCorrelation(temp, size, count);
+        int *ar = autoCorrelation(temp, size, count);
 
         for (int g = 0; g< size; ++g){
             ar[g] = abs(ar[g]);
@@ -2778,8 +2773,8 @@ int *ACForLinearComb(const int *arr, int size, int count) {
             result[i*size+q] = ar[q];
         }
         free(ar);
-        free(temp);
     }
+    free(temp);
     return result;
 }
 
@@ -2802,39 +2797,36 @@ int *DegForLinearComb(const int *arr, int size, int count) {
     return result;
 }
 
-int linearRedundancy(int *sbox, int size, int count, int sp [size-1][size], int ac [size-1][size]){
+int linearRedundancy(int *sbox, int size, int count, int sp [size-1][size], int ac [size-1][size]) {
     int result;
-    int *ar1 = SBoxToBooleanFunc(sbox,size,count);
+    int *ar1 = SBoxToBooleanFunc(sbox, size, count);
     //printf("\n1");
     int *ar2 = linearCombinations(ar1, size, count);
     free(ar1);
     //printf("\n2");
     //int *ar5 = calloc((size-1),sizeof(int));
     //int ar33[size-1][size];
-    //int *ar3 = WHTSpectrumForLinearComb(ar2,size,count);
+    int *ar3 = WHTSpectrumForLinearComb(ar2, size, count);
     //printf("\n3");
     /*for (int i = 0; i < size*(size-1); ++i){
         printf("%d ", ar3[i]);
     }*/
-    //int *ar4 = ACForLinearComb(ar2,size,count);
+    int *ar4 = ACForLinearComb(ar2, size, count);
     free(ar2);
-    //free(ar3);
-    //free(ar4);
     //printf("\n4");
     //ar5 = DegForLinearComb(ar2,size,count);
-    /*for (int b = 0; b < size - 1; ++b) {
+    for (int b = 0; b < size - 1; ++b) {
         for (int q = 0; q < size; ++q) {
-            sp[b][q] = ar3[b*size+q];
+            sp[b][q] = ar3[b * size + q];
         }
     }
     for (int z = 0; z < size - 1; ++z) {
         for (int n = 0; n < size; ++n) {
-            ac[z][n] = ar4[z*size+n];
+            ac[z][n] = ar4[z * size + n];
         }
-    }/*
+    }
     free(ar3);
     free(ar4);
-    result = 255;
     /*int dg [size-1];
     for (int i = 0; i < size - 1; ++i) {
         dg[i] = ar5[i];
@@ -2881,18 +2873,19 @@ int linearRedundancy(int *sbox, int size, int count, int sp [size-1][size], int 
         printf("%d ", dg[i]);
     }
     printf("\n");*/
-    /*int innerCounter = 0;
+    int innerCounter = 0;
     int OuterCounter = 0;
     int finalCounter = 0;
-    for (int i = 0; i < size-1; ++i) {
-        for (int h = i+1; h < size-1; ++h) {
+    for (int i = 0; i < size - 1; ++i) {
+        for (int h = i + 1; h < size - 1; ++h) {
             for (int j = 0; j < size; ++j) {
-                if (i!=h) {*/
-                    //if (sp[i][j] == sp[h][j] && sp[h][j] != -999 && (ac[i][j] == ac[h][j] && ac[h][j] != -999) /*(dg[i] == dg[h] && dg[h] != -999)*/) {
-                      //  innerCounter++;
-                   // }
-                //}
-            //}
+                if (i != h) {
+                    if (sp[i][j] == sp[h][j] && sp[h][j] != -999 &&
+                        (ac[i][j] == ac[h][j] && ac[h][j] != -999) /*(dg[i] == dg[h] && dg[h] != -999)*/) {
+                        innerCounter++;
+                    }
+                }
+            }
             //printf("\nInner counter = %d %d %d", i, h,innerCounter);
             /*printf("\n");
             printf("\n");
@@ -2904,29 +2897,29 @@ int linearRedundancy(int *sbox, int size, int count, int sp [size-1][size], int 
             for (int j = 0; j < size; ++j) {
                 printf("%d ", sp[h][j]);
             }*/
-            //if (innerCounter == size){
+            if (innerCounter == size) {
                 //if (i!=h) {
                 //if (ar4[i]==ar4[h] && ar5[i] == ar5[h]) {
                 //printf("\nSTRINGS ARE EQUAL");
                 //dg[h] = -999;
-                //OuterCounter++;
-                //for (int d = 0; d < size; ++d) {
-                   // sp[h][d] = -999;
+                OuterCounter++;
+                for (int d = 0; d < size; ++d) {
+                    sp[h][d] = -999;
                     //ac[h][j] = -999;
                     //dg[h] = -999;
+                }
                 //}
                 //}
-                //}
-            //}
-           // innerCounter = 0;
-       // }
+            }
+            innerCounter = 0;
+        }
         /*for (int j = 0; j < size; ++j){
             sp[i][j] = -999;
             ac[i][j] = -999;
             dg[i] = -999;
         }*/
         //printf("\nOC ==%d ", OuterCounter);
-    //}
+    }
     /*printf("\nHADAMARD SPECTRUM AFTER\n");
     for (int i = 0; i < size-1; ++i){
         for(int j = 0; j<size; ++j){
@@ -2945,9 +2938,9 @@ int linearRedundancy(int *sbox, int size, int count, int sp [size-1][size], int 
     for (int i = 0; i < size-1; ++i){
         printf("%d ", dg[i]);
     }*/
-    //finalCounter = finalCounter+OuterCounter;
+    finalCounter = finalCounter + OuterCounter;
     //printf("\nFINAL ==%d ", finalCounter);
-    //result = (size-1) - finalCounter;
+    result = (size - 1) - finalCounter;
     return result;
 }
 
