@@ -1042,7 +1042,7 @@ int *toANF(const int *func, int size) {
         }
         //printf("\n");
     }
-    int *coefficients = malloc(size * sizeof(int));
+    int *coefficients = calloc(size,sizeof(int));
     for (int i = 0; i < size; ++i) {
         coefficients[i] = matrix[i * size];
     }
@@ -1104,6 +1104,7 @@ int algebraicDeg(const int *func, int size, int count) {
             //printf("\n deg k  = %d",deg[k]);
             flag = 0;
             ++k;
+            free(bin);
         }
     }
     highestDec = deg[0];
@@ -1164,6 +1165,7 @@ int NLinearity(int *func, int size, int count) {
             //printf(" %d",functions [i * matrixColumns + j]);
         }
         //printf("\n");
+        free(bin);
     }
     //minimumNL = HammingDistance(func, functions, size);
     minimumNL1 = HammingDistance(func, functions, size);
@@ -1975,8 +1977,7 @@ int *propertiesOfLinearCombinations(const int *arr, int size, int count) {
         } else {
             balancedFlag = flag;
         }
-        int *fxarr = calloc(size, sizeof(int));
-        fxarr = HadamardCoefficients(temp, size, count);
+        int *fxarr = HadamardCoefficients(temp, size, count);
         /*printf("\nHADAMARD COEFFICIENTS");
         printf("\n");
         for (int q = 0; q < size; ++q) {
@@ -1992,8 +1993,7 @@ int *propertiesOfLinearCombinations(const int *arr, int size, int count) {
         int k = 1;
         //int ec = expansionCriterion(temp, size, k);
         //printf("\n");
-        int *ar = calloc(size, sizeof(int));
-        ar = autoCorrelation(temp, size, count);
+        int *ar = autoCorrelation(temp, size, count);
 
         /*printf("\nAUTO CORRELATING FUNCTION");
         printf("\n");
@@ -2309,15 +2309,15 @@ int NLOfLinearCombinations(const int *arr, int size, int count) {
     int *minimalNL = calloc(size - 1, sizeof(int));
     int result;
     int *temp = calloc(size, sizeof(int));
-    int *fxarr = calloc(size, sizeof(int));
     for (int i = 0; i < size - 1; ++i) {
         for (int j = 0; j < size; ++j) {
             temp[j] = arr[i * size + j];
         }
-        fxarr = HadamardCoefficients(temp, size, count);
+        int *fxarr = HadamardCoefficients(temp, size, count);
         int max1 = HadamardMax(fxarr, size);
         int nl2 = HadamardNLinearity(max1, count);
         minimalNL[i] = nl2;
+        free(fxarr);
     }
     int min = 0;
     min = minimalNL[0];
@@ -2332,7 +2332,6 @@ int NLOfLinearCombinations(const int *arr, int size, int count) {
     result = min;
     free(minimalNL);
     free(temp);
-    free(fxarr);
     return result;
 }
 
@@ -2407,17 +2406,14 @@ int *SBoxApprox(int *sbox, int size, int count) {
 //Функція знаходження LAT та її максимуму
 
 int LATMax(int *sbox, int size, int count) {
-    int *ar = calloc(size * count, sizeof(int));
-    ar = SBoxApprox(sbox, size, count);
+    int *ar = SBoxApprox(sbox, size, count);
     int *elems = elemsForN(size);
     int *binelems = binaryElementsApprox(elems, size, count);
     int *temp = calloc(size, sizeof(int));
     int *temp2 = calloc(size, sizeof(int));
     int *coefficients = calloc(size * size, sizeof(int));
-    int *bin1 = calloc(count, sizeof(int));
-    int *bin2 = calloc(count, sizeof(int));
     for (int i = 0; i < size; ++i) {
-        bin1 = valueToBinary(i, count);
+        int *bin1 = valueToBinary(i, count);
         for (int k = count - 1; k >= 0; k--) {
             if (bin1[k]) {
                 //printf("K===%d ",k);
@@ -2431,7 +2427,7 @@ int LATMax(int *sbox, int size, int count) {
         }
         //printf("\n ");
         for (int j = 0; j < size; ++j) {
-            bin2 = valueToBinary(j, count);
+            int *bin2 = valueToBinary(j, count);
             for (int q = count - 1; q >= 0; q--) {
                 if (bin2[q]) {
                     //printf("K===%d ",k);
@@ -2456,12 +2452,13 @@ int LATMax(int *sbox, int size, int count) {
             result = calc - (size / 2);
             //printf("COEFFS = %d ", result);
             coefficients[i * size + j] = result;
-
+            free(bin2);
         }
         for (int t = 0; t < size; ++t) {
             temp[t] = 0;
         }
         //printf("\n ");
+        free(bin1);
     }
     for (int n = 0; n < size; ++n) {
         for (int m = 0; m < size; ++m) {
@@ -2479,8 +2476,6 @@ int LATMax(int *sbox, int size, int count) {
     free(binelems);
     free(temp);
     free(temp2);
-    free(bin1);
-    free(bin2);
     return result;
 }
 
@@ -2663,15 +2658,15 @@ int algebraicImmunity(const int *sbox, int size, int count) {
     int mat[rows][cols];
     int tmp[cols];
     int values[count + count];
-    int *bin = calloc(count, sizeof(int));
     int *input_values = calloc(size * count, sizeof(int));
     for (int i = 0; i < size; ++i) {
-        bin = valueToBinary(i, count);
+        int *bin = valueToBinary(i, count);
         for (int j = 0; j < count; ++j) {
             input_values[i * count + j] = bin[j];
             //printf("%d ", input_values[i*count+j]);
         }
         //printf("\n");
+        free(bin);
     }
     for (int i = 0; i < 256; i++) {
         int y = sbox[i];
@@ -2694,7 +2689,6 @@ int algebraicImmunity(const int *sbox, int size, int count) {
         buildOneRow((int *) &values, (int *) &mat[i]);
     }
     int rank = rankCalculation(rows, cols, mat);
-    free(bin);
     free(input_values);
     //printf("%d", rank);
     if (rank == rows) {
