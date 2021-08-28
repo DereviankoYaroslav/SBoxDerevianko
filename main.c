@@ -128,7 +128,26 @@ int *DegForLinearComb(const int *arr, int size, int count);
 
 int linearRedundancy(int *sbox, int size, int count, int sp [size-1][size], int ac [size-1][size]);
 
-int *SBoxGeneratingDec(int n, int m);
+int *SBoxGeneratingDec(int n, int m, int counter);
+
+int NLOfSBoxDec(int *sbox, int size, int count);
+
+int *particleSwarmOptimization(int size, int count, int N);
+
+void FisherYates(int *player, int n);
+
+CONST int aesSbox[] = {99, 124, 119, 123, 242, 107, 111, 197, 48, 1, 103, 43, 254, 215, 171, 118, 202, 130, 201, 125, 250,
+                     89, 71, 240, 173, 212, 162, 175, 156, 164, 114, 192, 183, 253, 147, 38, 54, 63, 247, 204, 52, 165,
+                     229, 241, 113, 216, 49, 21, 4, 199, 35, 195, 24, 150, 5, 154, 7, 18, 128, 226, 235, 39, 178, 117,
+                     9, 131, 44, 26, 27, 110, 90, 160, 82, 59, 214, 179, 41, 227, 47, 132, 83, 209, 0, 237, 32, 252,
+                     177, 91, 106, 203, 190, 57, 74, 76, 88, 207, 208, 239, 170, 251, 67, 77, 51, 133, 69, 249, 2, 127,
+                     80, 60, 159, 168, 81, 163, 64, 143, 146, 157, 56, 245, 188, 182, 218, 33, 16, 255, 243, 210, 205,
+                     12, 19, 236, 95, 151, 68, 23, 196, 167, 126, 61, 100, 93, 25, 115, 96, 129, 79, 220, 34, 42, 144,
+                     136, 70, 238, 184, 20, 222, 94, 11, 219, 224, 50, 58, 10, 73, 6, 36, 92, 194, 211, 172, 98, 145,
+                     149, 228, 121, 231, 200, 55, 109, 141, 213, 78, 169, 108, 86, 244, 234, 101, 122, 174, 8, 186, 120,
+                     37, 46, 28, 166, 180, 198, 232, 221, 116, 31, 75, 189, 139, 138, 112, 62, 181, 102, 72, 3, 246, 14,
+                     97, 53, 87, 185, 134, 193, 29, 158, 225, 248, 152, 17, 105, 217, 142, 148, 155, 30, 135, 233, 206,
+                     85, 40, 223, 140, 161, 137, 13, 191, 230, 66, 104, 65, 153, 45, 15, 176, 84, 187, 22};
 
 int main(int args, char **argv) {
     SetConsoleOutputCP(1251);
@@ -721,7 +740,8 @@ int main(int args, char **argv) {
 
     //int ar2[] = {130, 211, 33, 31, 149, 220, 78, 134, 90, 104, 141, 71, 196, 49, 160, 94, 206, 32, 215, 182, 86, 44, 51, 5, 129, 143, 8, 50, 179, 138, 204, 88, 132, 34, 243, 92, 123, 30, 184, 108, 200, 113, 245, 111, 9, 4, 18, 197, 80, 212, 87, 10, 231, 120, 250, 77, 73, 180, 166, 151, 133, 62, 207, 14, 161, 16, 242, 60, 105, 23, 205, 0, 45, 11, 162, 219, 191, 103, 213, 47, 135, 25, 40, 251, 106, 177, 39, 181, 20, 140, 225, 217, 234, 156, 114, 159, 203, 238, 137, 169, 59, 131, 230, 42, 99, 147, 223, 193, 158, 65, 54, 201, 52, 244, 185, 56, 176, 75, 91, 22, 82, 190, 252, 152, 119, 146, 228, 171, 64, 115, 235, 66, 154, 155, 253, 100, 36, 167, 27, 221, 118, 98, 227, 236, 6, 128, 21, 70, 178, 2, 125, 168, 79, 24, 35, 63, 122, 58, 7, 142, 83, 102, 28, 237, 247, 208, 109, 57, 214, 12, 72, 38, 3, 139, 74, 107, 233, 240, 165, 199, 96, 229, 124, 136, 150, 37, 173, 198, 218, 85, 95, 17, 117, 192, 148, 26, 84, 163, 68, 224, 13, 183, 81, 46, 144, 226, 246, 186, 189, 15, 89, 1, 127, 239, 112, 55, 172, 164, 48, 19, 248, 254, 116, 222, 249,194, 153, 101, 76, 41, 255, 195, 187, 209, 53, 110, 61, 93, 232, 174, 202, 126, 188, 29, 157, 67, 175, 241, 43, 121, 170, 97, 145, 210, 69, 216};
 
-    FILE *file;
+//Linear redundancy counting to file
+    /*FILE *file;
     fopen_s(&file, "Generated S-boxes.txt", "a");
     if (file == NULL) {
         printf("ERROR: Can't save sbox to file!\n");
@@ -740,7 +760,7 @@ int main(int args, char **argv) {
         int *ar2 = SBoxGeneratingDec(8, 8);
 
         fprintf(file, "\n");
-        fprintf(file, "\nS-BOX NUMBER %d ", counter);
+        fprintf(file, "\nS-BOX NUMBER %d:\n ", counter);
         for (int i = 0; i < 256; i++) {
             fprintf(file, "%d, ", ar2[i]);
         }
@@ -765,7 +785,7 @@ int main(int args, char **argv) {
             break;
         }
     }
-    fclose(file);
+    fclose(file);*/
 
 
     /*int uc = 255;
@@ -809,64 +829,26 @@ int main(int args, char **argv) {
     printf("\nS-box with not zero redundancy -  %d \n", flag);
     free(ar2);*/
 
-    /*int arr1[] = {0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0,
-                  1, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0,
-                  0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0,
-                  1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0,
-                  1, 1, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0,
-                  0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1,
-                  1, 1, 1, 1, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 0, 1};
+    int *ar = particleSwarmOptimization(256,8,100);
 
-    int arr2[] = {1, 1, 1, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0,
-                  1, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0,
-                  1, 1, 0, 1, 1, 0, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1,
-                  1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1,
-                  1, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 0, 0,
-                  0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0,
-                  1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1,};
+    /*int *ar = SBoxGeneratingDec(n,n,10);
 
-    int *whtar1 = HadamardCoefficients(arr1,256,8);
-    bubble_sort(whtar1,256);
-
-    for (int i = 0; i < 256; ++i){
-        printf("%d ", whtar1[i]);
+    printf("Generated s-box: ");
+    for (int i = 0; i < size; ++i) {
+        printf("%d, ", ar[i]);
     }
-    printf("\n");
 
-    int AD = algebraicDeg(arr1,256,8);
-    printf("AD = %d ", AD);
-    printf("\n");
+    int flag = 0;
 
-    int *ac1 = autoCorrelation(arr1, 256, 8);
-    int AC = autoCorrelationMax(ac1,256);
-    printf("AC = %d ", AC);
-    printf("\n");
-
-    int *whtar2 = HadamardCoefficients(arr2,256,8);
-    bubble_sort(whtar2,256);
-
-    for (int i = 0; i < 256; ++i){
-        printf("%d ", whtar2[i]);
-    }
-    printf("\n");
-
-    int AD2 = algebraicDeg(arr2,256,8);
-    printf("AD2 = %d ", AD2);
-    printf("\n");
-
-    int *ac2 = autoCorrelation(arr2, 256, 8);
-    int AC2 = autoCorrelationMax(ac2,256);
-    printf("AC2 = %d ", AC2);
-    printf("\n");*/
-
-    /*int f[] = {1,0,1,1};
-    int *ac1 = HadamardCoefficients(f, 4, 2);
-    for (int i = 0; i < 4; ++i){
-        printf("%d ", ac1[i]);
+    while(flag < 100){
+        FisherYates(ar,256);
+        printf("\n Generated s-box: ");
+        for (int i = 0; i < size; ++i) {
+            printf("%d, ", ar[i]);
+        }
+        flag++;
+        printf("\n");
     }*/
-
-
-    //int nl = NLOfSBox(ar2,256,8);
 
     system("PAUSE");
 
@@ -2476,6 +2458,7 @@ int LATMax(int *sbox, int size, int count) {
     free(binelems);
     free(temp);
     free(temp2);
+    free(coefficients);
     return result;
 }
 
@@ -2710,6 +2693,8 @@ int numOfCombinations(int n, int d) {
     return numOfCombinations(n - 1, d - 1) + numOfCombinations(n - 1, d);
 }
 
+//Функція бульбашкового сортування
+
 void bubble_sort(int *data, int size) {
     int i, j;
     for (i = 0; i < size; ++i) {
@@ -2722,6 +2707,8 @@ void bubble_sort(int *data, int size) {
         }
     }
 }
+
+//Функція знаходження спектру Уолдша-Адамара для кожної з лінійних комбінацій
 
 int *WHTSpectrumForLinearComb(const int *arr, int size, int count) {
     int *result = calloc(size*(size-1), sizeof(int));
@@ -2750,6 +2737,8 @@ int *WHTSpectrumForLinearComb(const int *arr, int size, int count) {
     return result;
 }
 
+//Функція знаходження автокореляційної функції для кожної з лінійних комбінацій
+
 int *ACForLinearComb(const int *arr, int size, int count) {
     int *result = calloc(size*(size-1), sizeof(int));
     int *temp = calloc(size, sizeof(int));
@@ -2776,6 +2765,8 @@ int *ACForLinearComb(const int *arr, int size, int count) {
     return result;
 }
 
+//Функція знаходження алгебраїчного ступеня для кожної з лінійних комбінацій
+
 int *DegForLinearComb(const int *arr, int size, int count) {
     int *result = calloc((size-1), sizeof(int));
     int *temp = calloc(size, sizeof(int));
@@ -2794,6 +2785,8 @@ int *DegForLinearComb(const int *arr, int size, int count) {
     free(temp);
     return result;
 }
+
+//Функція знаходження лінійної збитковості S-Box'у
 
 int linearRedundancy(int *sbox, int size, int count, int sp [size-1][size], int ac [size-1][size]) {
     int result;
@@ -2944,10 +2937,10 @@ int linearRedundancy(int *sbox, int size, int count, int sp [size-1][size], int 
 
 //Функція генерації S-Box'у
 
-int *SBoxGeneratingDec(int n, int m) {
+int *SBoxGeneratingDec(int n, int m, int counter) {
     int size = raiseToPower(2, n);
     int *dec = calloc(size, sizeof(int));
-    srand(time(NULL));
+    srand((counter*counter) %size);
     for (int i = 0; i < size;) {
         dec[i] = rand() % size;
         int contains = 0;
@@ -2961,12 +2954,58 @@ int *SBoxGeneratingDec(int n, int m) {
             i++;
         }
     }
-    printf("Generated s-box: ");
+    /*printf("Generated s-box: ");
     for (int i = 0; i < size; ++i) {
         printf("%d, ", dec[i]);
     }
-    printf("\n");
+    printf("\n");*/
+    FisherYates(dec,size);
     return dec;
 }
+
+int NLOfSBoxDec(int *sbox, int size, int count) {
+    int result;
+    int *ar1 = SBoxToBooleanFunc(sbox,size,count);
+    int *ar2 = linearCombinations(ar1, size, count);
+    result = NLOfLinearCombinations(ar2, size, count);
+    free(ar2);
+    return result;
+}
+
+int *particleSwarmOptimization(int size, int count, int N){
+    int population[N][size];
+    for (int i = 0; i < size; ++i){
+        population[0][i] = aesSbox[i];
+    }
+    for (int q = 1; q < N; ++q){
+        int *ar1 = SBoxGeneratingDec(count,count, q);
+        for(int w = 0; w < size; ++w) {
+            population[q][w] = ar1[w];
+        }
+        free(ar1);
+    }
+    for (int q = 0; q < N; ++q){
+        for(int w = 0; w < size; ++w){
+            printf("%d ",population[q][w]);
+        }
+        int LAT = LATMax(population[q],size,count);
+        int NL = raiseToPower(2, count - 1) - LAT;
+        printf( "\nNon-linearity from LAT = %d \n", NL);
+        printf("\n");
+    }
+}
+
+void FisherYates(int *arr, int n) {
+    int i, j, tmp;
+
+    for (i = n - 1; i > 0; i--) {
+        j = rand() % (i + 1);
+        tmp = arr[j];
+        arr[j] = arr[i];
+        arr[i] = tmp;
+    }
+}
+
+
 
 
