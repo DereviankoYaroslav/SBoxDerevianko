@@ -2975,9 +2975,10 @@ int NLOfSBoxDec(int *sbox, int size, int count) {
 }
 
 int *particleSwarmOptimization(int size, int count, int N){
+    int maxIter = 100;
     srand(time(NULL));
     int flag = rand()%size;
-    int population[N][size];
+    int population[2*N][size];
     for (int i = 0; i < size; ++i){
         population[0][i] = aesSbox[i];
     }
@@ -3046,6 +3047,11 @@ int *particleSwarmOptimization(int size, int count, int N){
             printf("%d ",pBest[q][w]);
         }
         printf("\n\n");
+    }
+    double weight = 0.6;
+    while(maxIter > 0){
+        int xr = rand();
+        //
     }
 }
 
