@@ -136,6 +136,8 @@ int *particleSwarmOptimization(int size, int count, int N);
 
 void FisherYates(int *player, int n);
 
+void bubblesortDescending(int *data, int size);
+
 CONST int aesSbox[] = {99, 124, 119, 123, 242, 107, 111, 197, 48, 1, 103, 43, 254, 215, 171, 118, 202, 130, 201, 125, 250,
                      89, 71, 240, 173, 212, 162, 175, 156, 164, 114, 192, 183, 253, 147, 38, 54, 63, 247, 204, 52, 165,
                      229, 241, 113, 216, 49, 21, 4, 199, 35, 195, 24, 150, 5, 154, 7, 18, 128, 226, 235, 39, 178, 117,
@@ -829,7 +831,7 @@ int main(int args, char **argv) {
     printf("\nS-box with not zero redundancy -  %d \n", flag);
     free(ar2);*/
 
-    int *ar = particleSwarmOptimization(256,8,100);
+    int *ar = particleSwarmOptimization(256,8,10);
 
     /*int *ar = SBoxGeneratingDec(n,n,10);
 
@@ -2973,26 +2975,42 @@ int NLOfSBoxDec(int *sbox, int size, int count) {
 }
 
 int *particleSwarmOptimization(int size, int count, int N){
-    int population[N][size];
+    int *population = calloc(N*size, sizeof(int));
     for (int i = 0; i < size; ++i){
-        population[0][i] = aesSbox[i];
+        population[0*size+i] = aesSbox[i];
     }
     for (int q = 1; q < N; ++q){
         int *ar1 = SBoxGeneratingDec(count,count, q);
         for(int w = 0; w < size; ++w) {
-            population[q][w] = ar1[w];
+            population[q*size+w] = ar1[w];
         }
         free(ar1);
     }
+    int arrNL[N];
     for (int q = 0; q < N; ++q){
+        int *sbox = calloc(size,sizeof(int));
+        for(int w = 0; w < size; ++w){
+            printf("%d ",population[q*size+w]);
+            sbox[w] = population[q*size+w];
+        }
+        int LAT = LATMax(sbox,size,count);
+        int NL = raiseToPower(2, count - 1) - LAT;
+        printf( "\nNon-linearity from LAT = %d \n", NL);
+        arrNL[q] = NL;
+        printf("\n");
+        printf("\n");
+        free(sbox);
+    }
+    bubblesortDescending(arrNL,N);
+    for (int q = 0; q < N; ++q){
+        printf( "\n%d ", arrNL[q]);
+    }
+    /*for (int q = 0; q < N; ++q){
         for(int w = 0; w < size; ++w){
             printf("%d ",population[q][w]);
         }
-        int LAT = LATMax(population[q],size,count);
-        int NL = raiseToPower(2, count - 1) - LAT;
-        printf( "\nNon-linearity from LAT = %d \n", NL);
         printf("\n");
-    }
+    }*/
 }
 
 void FisherYates(int *arr, int n) {
@@ -3003,6 +3021,19 @@ void FisherYates(int *arr, int n) {
         tmp = arr[j];
         arr[j] = arr[i];
         arr[i] = tmp;
+    }
+}
+
+void bubblesortDescending(int *data, int size) {
+    int i, j;
+    for (i = 0; i < size; ++i) {
+        for (j = size - 1; j > i; --j) {
+            if (data[j] > data[j-1]) {
+                int t = data[j - 1];
+                data[j - 1] = data[j];
+                data[j] = t;
+            }
+        }
     }
 }
 
