@@ -136,7 +136,7 @@ int *particleSwarmOptimization(int size, int count, int N);
 
 void FisherYates(int *player, int n);
 
-void bubblesortDescending(int *data, int *data2, int size);
+void bubblesortDescending(int *data, int size);
 
 CONST int aesSbox[] = {99, 124, 119, 123, 242, 107, 111, 197, 48, 1, 103, 43, 254, 215, 171, 118, 202, 130, 201, 125, 250,
                      89, 71, 240, 173, 212, 162, 175, 156, 164, 114, 192, 183, 253, 147, 38, 54, 63, 247, 204, 52, 165,
@@ -3015,13 +3015,35 @@ int *particleSwarmOptimization(int size, int count, int N){
         }
     }
     printf("\n");
-    /*for (int q = 0; q < N; ++q){
+    for (int q = 0; q < N; ++q){
         printf( "\n%d ", arrNL[q]);
-    }*/
+    }
     printf("\nSORTED BY Non-Linearity\n");
     for (int q = 0; q < N; ++q){
         for(int w = 0; w < size; ++w){
             printf("%d ",population[q][w]);
+        }
+        printf("\n\n");
+    }
+    int gBest[size];
+    for (int m = 0; m < size; ++m){
+        gBest[m] = population[0][m];
+    }
+    int pBest[N-1][size];
+    for (int i = 1; i < N; ++i){
+        for (int j = 0; j < size; ++j){
+            pBest[i-1][j] = population[i][j];
+        }
+    }
+    printf("\n\n");
+    printf("\ngBest\n");
+    for (int m = 0; m < size; ++m){
+        printf("%d ",gBest[m]);
+    }
+    printf("\npBest\n");
+    for (int q = 0; q < N-1; ++q){
+        for(int w = 0; w < size; ++w){
+            printf("%d ",pBest[q][w]);
         }
         printf("\n\n");
     }
@@ -3038,17 +3060,14 @@ void FisherYates(int *arr, int n) {
     }
 }
 
-void bubblesortDescending(int *data, int *data2, int size) {
+void bubblesortDescending(int *data, int size) {
     int i, j;
     for (i = 0; i < size; ++i) {
         for (j = size - 1; j > i; --j) {
             if (data[j] > data[j-1]) {
                 int t = data[j - 1];
-                int g = data2[j-1];
                 data[j - 1] = data[j];
-                data2[j - 1] = data2[j];
                 data[j] = t;
-                data2[j] = t;
             }
         }
     }
