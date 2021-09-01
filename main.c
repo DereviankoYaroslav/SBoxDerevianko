@@ -138,6 +138,8 @@ void FisherYates(int *player, int n);
 
 void bubblesortDescending(int *data, int size);
 
+int myModulusDec(int number, int mod);
+
 CONST int aesSbox[] = {99, 124, 119, 123, 242, 107, 111, 197, 48, 1, 103, 43, 254, 215, 171, 118, 202, 130, 201, 125, 250,
                      89, 71, 240, 173, 212, 162, 175, 156, 164, 114, 192, 183, 253, 147, 38, 54, 63, 247, 204, 52, 165,
                      229, 241, 113, 216, 49, 21, 4, 199, 35, 195, 24, 150, 5, 154, 7, 18, 128, 226, 235, 39, 178, 117,
@@ -831,7 +833,7 @@ int main(int args, char **argv) {
     printf("\nS-box with not zero redundancy -  %d \n", flag);
     free(ar2);*/
 
-    int *ar = particleSwarmOptimization(256,8,40);
+    int *ar = particleSwarmOptimization(256,8,10);
 
     /*int *ar = SBoxGeneratingDec(n,n,10);
 
@@ -919,6 +921,17 @@ int myModulus(int number, int mod) {
         }
     }
     return number % 2;
+}
+
+//Функція приведення числа за модулем дуякого числа
+
+int myModulusDec(int number, int mod) {
+    if (number < 0) {
+        while (number < 0) {
+            number = number + mod;
+        }
+    }
+    return number % mod;
 }
 
 //Функція перетворення елементів з десяткової СЧ у двійкову СЧ, для певного ступеня N
@@ -3030,10 +3043,10 @@ int *particleSwarmOptimization(int size, int count, int N){
     for (int m = 0; m < size; ++m){
         gBest[m] = population[0][m];
     }
-    int pBest[N-1][size];
-    for (int i = 1; i < N; ++i){
+    int pBest[N][size];
+    for (int i = 0; i < N; ++i){
         for (int j = 0; j < size; ++j){
-            pBest[i-1][j] = population[i][j];
+            pBest[i][j] = population[i][j];
         }
     }
     printf("\n\n");
@@ -3042,7 +3055,7 @@ int *particleSwarmOptimization(int size, int count, int N){
         printf("%d ",gBest[m]);
     }
     printf("\npBest\n");
-    for (int q = 0; q < N-1; ++q){
+    for (int q = 0; q < N; ++q){
         for(int w = 0; w < size; ++w){
             printf("%d ",pBest[q][w]);
         }
@@ -3050,26 +3063,59 @@ int *particleSwarmOptimization(int size, int count, int N){
     }
     double weight = 0.6;
     int Vel[N][size];
+    int arrNLSorted[size];
     while(maxIter > 0) {
         int Q = 100;
         int rd1 = rand() % (Q);
         double xr1 = (double) rd1 / Q;
+        double c1 = 2*xr1;
         int rd2 = rand() % (Q);
         double xr2 = (double) rd2 / Q;
+        double c2 = 2*xr2;
         int rd3 = rand() % (Q);
         double xr3 = (double) rd3 / Q;
+        double r1 = xr3;
         int rd4 = rand() % (Q);
         double xr4 = (double) rd4 / Q;
+        double r2 = xr4;
         printf("xr1 = %lf ", xr1);
         printf("xr2 = %lf ", xr2);
         printf("xr3 = %lf ", xr3);
         printf("xr4 = %lf \n", xr4);
+        printf("\n\n");
+        for (int b = 0; b < N; ++b){
+            arrNLSorted[b] = arrNL[b];
+        }
+        int tempSbox[size];
+        for (int i = 0; i < N; ++i){
+            for (int j = 0; j < size; ++j){
+                Vel[i][j] = ceil(weight*Vel[i][j] + c1*r1*(pBest[i][j] - population[i][j]+
+                        c2*r2*(gBest[j]-population[i][j])));
+                if (Vel[i][j] < 0){
+                    Vel[i][j] = myModulusDec((Vel[i][j]+256),256);
+                }
+                //printf("Vel[%d][%d] = %d ", i,j,Vel[i][j]);
+                int X = myModulusDec((population[i][j]+Vel[i][j]),256);
+                tempSbox[j] = X;
+            }
+            for(int k = 0; k < size; ++k) {
+                population[N + i][k] = tempSbox[k];
+                printf("%d ", tempSbox[k]);
+            }
+            printf("\n");
+        }
         maxIter = maxIter-25;
     }
-    /*while(maxIter > 0){
-        //int xr = rand();
-        //
-        //maxIter--;
+    /*printf("\nNEW Arrays\n");
+    for (int q = 0; q < 2*N; ++q){
+        for(int w = 0; w < size; ++w){
+            printf("%d, ",population[q][w]);
+        }
+        int LAT = LATMax(population[q],size,count);
+        int NL = raiseToPower(2, count - 1) - LAT;
+        printf( "\nNon-linearity from LAT = %d \n", NL);
+        printf("\n");
+        printf("\n\n");
     }*/
 }
 
