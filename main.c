@@ -831,7 +831,7 @@ int main(int args, char **argv) {
     printf("\nS-box with not zero redundancy -  %d \n", flag);
     free(ar2);*/
 
-    int *ar = particleSwarmOptimization(256,8,10);
+    int *ar = particleSwarmOptimization(256,8,40);
 
     /*int *ar = SBoxGeneratingDec(n,n,10);
 
@@ -2975,7 +2975,7 @@ int NLOfSBoxDec(int *sbox, int size, int count) {
 }
 
 int *particleSwarmOptimization(int size, int count, int N){
-    int maxIter = 100;
+    int maxIter = 250; //according to article
     srand(time(NULL));
     int flag = rand()%size;
     int population[2*N][size];
@@ -3049,10 +3049,28 @@ int *particleSwarmOptimization(int size, int count, int N){
         printf("\n\n");
     }
     double weight = 0.6;
-    while(maxIter > 0){
-        int xr = rand();
-        //
+    int Vel[N][size];
+    while(maxIter > 0) {
+        int Q = 100;
+        int rd1 = rand() % (Q);
+        double xr1 = (double) rd1 / Q;
+        int rd2 = rand() % (Q);
+        double xr2 = (double) rd2 / Q;
+        int rd3 = rand() % (Q);
+        double xr3 = (double) rd3 / Q;
+        int rd4 = rand() % (Q);
+        double xr4 = (double) rd4 / Q;
+        printf("xr1 = %lf ", xr1);
+        printf("xr2 = %lf ", xr2);
+        printf("xr3 = %lf ", xr3);
+        printf("xr4 = %lf \n", xr4);
+        maxIter = maxIter-25;
     }
+    /*while(maxIter > 0){
+        //int xr = rand();
+        //
+        //maxIter--;
+    }*/
 }
 
 void FisherYates(int *arr, int n) {
