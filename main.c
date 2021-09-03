@@ -2978,6 +2978,8 @@ int *SBoxGeneratingDec(int n, int m, int counter) {
     return dec;
 }
 
+//Функція знаходження нелінійності S-Box'у в десятковому вигляді
+
 int NLOfSBoxDec(int *sbox, int size, int count) {
     int result;
     int *ar1 = SBoxToBooleanFunc(sbox,size,count);
@@ -2986,6 +2988,8 @@ int NLOfSBoxDec(int *sbox, int size, int count) {
     free(ar2);
     return result;
 }
+
+//Функція генерації S-Box'у за допомогою методу Рою Часток
 
 int *particleSwarmOptimization(int size, int count, int N){
     int maxIter = 250; //according to article
@@ -3183,6 +3187,8 @@ int *particleSwarmOptimization(int size, int count, int N){
     }
 }
 
+//Перемішування Фішера-Йейтса
+
 void FisherYates(int *arr, int n) {
     int i, j, tmp;
 
@@ -3193,6 +3199,8 @@ void FisherYates(int *arr, int n) {
         arr[i] = tmp;
     }
 }
+
+//Функція бульбашкового сортування за спаданням
 
 void bubblesortDescending(int *data, int size) {
     int i, j;
