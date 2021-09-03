@@ -833,7 +833,7 @@ int main(int args, char **argv) {
     printf("\nS-box with not zero redundancy -  %d \n", flag);
     free(ar2);*/
 
-    int *ar = particleSwarmOptimization(256,8,10);
+    int *ar = particleSwarmOptimization(256,8,5);
 
     /*int *ar = SBoxGeneratingDec(n,n,10);
 
@@ -3078,17 +3078,18 @@ int *particleSwarmOptimization(int size, int count, int N){
         int rd4 = rand() % (Q);
         double xr4 = (double) rd4 / Q;
         double r2 = xr4;
-        printf("xr1 = %lf ", xr1);
+        /*printf("xr1 = %lf ", xr1);
         printf("xr2 = %lf ", xr2);
         printf("xr3 = %lf ", xr3);
         printf("xr4 = %lf \n", xr4);
-        printf("\n\n");
+        printf("\n\n");*/
         for (int b = 0; b < N; ++b){
             arrNLSorted[b] = arrNL[b];
         }
         int tempSbox[size];
+        int tempSbox2 [size];
         for (int i = 0; i < N; ++i){
-            for (int j = 0; j < size; ++j){
+            for (int j = 0; j < size;){
                 Vel[i][j] = ceil(weight*Vel[i][j] + c1*r1*(pBest[i][j] - population[i][j]+
                         c2*r2*(gBest[j]-population[i][j])));
                 if (Vel[i][j] < 0){
@@ -3096,17 +3097,40 @@ int *particleSwarmOptimization(int size, int count, int N){
                 }
                 //printf("Vel[%d][%d] = %d ", i,j,Vel[i][j]);
                 int X = myModulusDec((population[i][j]+Vel[i][j]),256);
-                tempSbox[j] = X;
+                int contains;
+                if (contains == 0) {
+                    tempSbox[j] = X;
+                }
+                else{
+                    tempSbox[j] = myModulusDec((tempSbox[j]+rand()),256)+1;
+                };
+                //printf("\n%d temp box b4 cycle [%d]", tempSbox[j],j);
+                contains = 0;
+                for (int k = 0; k < j; ++k) {
+                    if (tempSbox[k] == tempSbox[j]) {
+                        //printf("\n%d k = \n", k);
+                        //printf("\n%d j = \n", j);
+                        //tempSbox[j] = myModulusDec((tempSbox[j]+rand()),256);
+                        //tempSbox2[j] = tempSbox[j];
+                        //printf("\n%d j", tempSbox[j]);
+                        //printf("\n%d k", tempSbox[k]);
+                        contains = 1;
+                        break;
+                    }
+                }
+                if (!contains) {
+                    j++;
+                }
             }
             for(int k = 0; k < size; ++k) {
                 population[N + i][k] = tempSbox[k];
-                printf("%d ", tempSbox[k]);
+                //printf("%d ", tempSbox[k]);
             }
-            printf("\n");
+            //printf("\n");
         }
         maxIter = maxIter-25;
     }
-    /*printf("\nNEW Arrays\n");
+    printf("\nNEW Arrays\n");
     for (int q = 0; q < 2*N; ++q){
         for(int w = 0; w < size; ++w){
             printf("%d, ",population[q][w]);
@@ -3116,7 +3140,7 @@ int *particleSwarmOptimization(int size, int count, int N){
         printf( "\nNon-linearity from LAT = %d \n", NL);
         printf("\n");
         printf("\n\n");
-    }*/
+    }
 }
 
 void FisherYates(int *arr, int n) {
