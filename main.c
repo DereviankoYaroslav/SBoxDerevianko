@@ -3103,9 +3103,9 @@ int *particleSwarmOptimization(int size, int count, int N){
                 }
                 else{
                     tempSbox[j] = myModulusDec((tempSbox[j]+rand()),256);
-                    if (tempSbox[j] == 0){
+                    /*if (tempSbox[j] == 0){
                         tempSbox[j] = myModulusDec((tempSbox[j]+rand()),256);
-                    }
+                    }*/
                 };
                 //printf("\n%d temp box b4 cycle [%d]", tempSbox[j],j);
                 contains = 0;
