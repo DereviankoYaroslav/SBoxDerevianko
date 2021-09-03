@@ -3055,7 +3055,7 @@ int *particleSwarmOptimization(int size, int count, int N){
         printf("%d ",gBest[m]);
     }
     printf("\npBest\n");
-    for (int q = 0; q < N; ++q){
+    for (int q = 1; q < N; ++q){
         for(int w = 0; w < size; ++w){
             printf("%d ",pBest[q][w]);
         }
@@ -3133,7 +3133,7 @@ int *particleSwarmOptimization(int size, int count, int N){
         }
         maxIter = maxIter-25;
     }
-    printf("\nNEW Arrays\n");
+    /*printf("\nNEW Arrays\n");
     for (int q = 0; q < 2*N; ++q){
         for(int w = 0; w < size; ++w){
             printf("%d, ",population[q][w]);
@@ -3142,6 +3142,43 @@ int *particleSwarmOptimization(int size, int count, int N){
         int NL = raiseToPower(2, count - 1) - LAT;
         printf( "\nNon-linearity from LAT = %d \n", NL);
         printf("\n");
+        printf("\n\n");
+    }*/
+    int arrNL2[2*N];
+    for (int q = 0; q < 2*N; ++q){
+        for(int w = 0; w < size; ++w){
+            printf("%d ",population[q][w]);
+        }
+        int LAT = LATMax(population[q],size,count);
+        int NL = raiseToPower(2, count - 1) - LAT;
+        printf( "\nNon-linearity from LAT = %d \n", NL);
+        printf("\n");
+        arrNL2[q] = NL;
+    }
+    int g2[size];
+    for (int i = 0; i < 2*N; ++i) {
+        for (int j = (2*N - 1); j > i; --j) {
+            if (arrNL2[j] > arrNL2[j - 1]) {
+                int h = arrNL2[j - 1];
+                arrNL2[j - 1] = arrNL2[j];
+                arrNL2[j] = h;
+                for (int k = 0; k < size; ++k) {
+                    g2[k] = population[j - 1][k];
+                    population[j - 1][k] = population[j][k];
+                    population[j][k] = g2[k];
+                }
+            }
+        }
+    }
+    printf("\n");
+    for (int q = 0; q < 2*N; ++q){
+        printf( "\n%d ", arrNL2[q]);
+    }
+    printf("\nSORTED BY Non-Linearity\n");
+    for (int q = 0; q < 2*N; ++q){
+        for(int w = 0; w < size; ++w){
+            printf("%d ",population[q][w]);
+        }
         printf("\n\n");
     }
 }
