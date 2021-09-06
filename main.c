@@ -833,9 +833,18 @@ int main(int args, char **argv) {
     printf("\nS-box with not zero redundancy -  %d \n", flag);
     free(ar2);*/
 
-    int *ar = particleSwarmOptimization(256,8,40);
+    /*int *ar = particleSwarmOptimization(256,8,10);
 
-    /*FILE *file;
+    printf("\n\nFinal data\n\n");
+
+    for (int q = 0; q < 10; ++q) {
+        for (int w = 0; w < size; ++w) {
+            printf("%d, ", ar[q * size + w]);
+        }
+        printf("\n\n");
+    }*/
+
+    FILE *file;
     fopen_s(&file, "sbox110NLCheck.txt", "w");
     if (file == NULL) {
         printf("ERROR: Can't save sbox to file!\n");
@@ -843,11 +852,10 @@ int main(int args, char **argv) {
     }
 
 
-    int ar[] = {59, 124, 119, 123, 242, 107, 111, 197, 48, 1, 103, 43, 254, 215, 171, 118, 202, 130, 201, 125, 250, 89, 71, 240, 173, 212, 162, 175, 156, 164, 114, 192, 183, 253, 147, 38, 54, 63, 247, 204, 52, 165, 229, 241, 113, 216, 49, 21, 4, 199, 35, 195, 24, 150, 5, 154, 7, 18, 128, 226, 235, 39, 178, 117, 9, 131, 44, 26, 27, 110, 90, 160, 82, 137, 214, 179, 41, 227, 47, 132, 83, 209, 0, 237, 32, 252, 177, 91, 106, 203, 190, 57, 74, 76, 88, 207, 208, 239, 170, 251, 67, 77, 51, 133, 69,
-            249, 2, 127, 80, 60, 159, 168, 81, 163, 64, 143, 146, 157, 56, 245, 188, 182, 218, 33, 16, 255, 243, 210, 205, 12, 19, 236, 95, 151, 68, 23, 196, 167, 126, 61, 100, 93, 25, 115, 96, 129, 79, 220, 34, 42, 144, 136, 70, 238, 184, 20, 222, 94,
-            11, 219, 224, 50, 58, 10, 73, 6, 36, 92, 194, 211, 172, 98, 145, 149, 228, 121, 231, 200, 55, 109, 141, 213, 78, 169, 108, 86, 244, 234, 101, 122, 174, 8, 186, 120, 37, 46, 28, 166, 180, 198, 232, 221, 116, 31, 75, 189, 139, 138, 112, 62,
-            181, 102, 72, 3, 246, 14, 97, 53, 87, 185, 134, 193, 29, 158, 225, 248, 152, 17, 105, 217, 142, 148, 155, 30, 135, 233,
-            206, 85, 40, 223, 140, 161, 104, 13, 191, 230, 66, 99, 65, 153, 45, 15, 176, 84, 187, 22};
+    int ar[] = {195, 124, 119, 123, 242, 107, 111, 197, 48, 1, 103, 43, 254, 215, 171, 118, 202, 130, 201, 125, 250, 89, 71, 240, 173, 212, 162, 175, 156, 164, 114, 192, 183, 253, 147, 38, 54, 63, 247, 204, 52, 165, 229, 241, 113, 216, 49, 21, 4, 199, 35,
+            214, 24, 150, 5, 154, 7, 18, 128, 226, 235, 39, 178, 117, 9, 131, 44, 26, 27, 110, 90, 160, 82, 59, 146, 179, 41, 227, 47, 132, 83, 209, 0, 237, 32, 252, 177, 91, 106, 203, 190, 57, 74, 76, 88, 207, 208, 239, 170, 251, 67, 77, 51, 133, 69,
+            249, 2, 127, 80, 60, 159, 168, 81, 163, 64, 143, 65, 157, 56, 245, 188, 182, 218, 33, 16, 255, 243, 210, 205, 12, 19, 236, 95, 151, 68, 23, 196, 167, 126, 61, 100, 93, 25, 115, 96, 129, 79, 220, 34, 42, 144, 136, 70, 238, 184, 20, 222, 94,
+            11, 219, 224, 50, 58, 10, 73, 6, 36, 92, 194, 211, 172, 98, 145, 149, 248, 121, 231, 200, 55, 109, 141, 213, 78, 169, 108, 86, 244, 234, 101, 122, 174, 8, 186, 120, 37, 46, 28, 166, 180, 198, 232, 221, 116, 31, 75, 189, 139, 138, 112, 62, 181, 102, 72, 3, 246, 14, 97, 53, 87, 185, 134, 193, 29, 158, 225, 15, 152, 17, 105, 217, 142, 148, 155, 30, 135, 233, 206, 85, 40, 223, 140, 161, 137, 13, 230, 153, 66, 104, 191, 228, 45, 187, 22, 84, 99, 176,};
 
     int LAT = LATMax(ar,256,8);
     int NL = raiseToPower(2, 8 - 1) - LAT;
@@ -860,7 +868,7 @@ int main(int args, char **argv) {
         fprintf(file, "0x%0X, ", ar[i]);
     }
     fprintf(file, "\n");
-    fclose(file);*/
+    fclose(file);
 
     /*int counter = 0;
     for (int i = 0; i < 256; ++i){
@@ -870,7 +878,7 @@ int main(int args, char **argv) {
     }
     printf("%d ", counter);*/
 
-    /*int LAT2 = LATMax(ar,256,8);
+    int LAT2 = LATMax(ar,256,8);
     int NL2 = raiseToPower(2, 8 - 1) - LAT2;
     printf("\nNon-linearity from LAT = %d \n", NL2);
     printf("\n");
@@ -879,7 +887,7 @@ int main(int args, char **argv) {
     int sp [255][256];
     int ac [255][256];
     int uc = linearRedundancy(ar, 256, 8, sp, ac);
-    printf("Linear redundancy = %d \n", (size-1) - uc);*/
+    printf("Linear redundancy = %d \n", (size-1) - uc);
 
     /*int *ar = SBoxGeneratingDec(n,n,10);
 
@@ -3038,7 +3046,7 @@ int NLOfSBoxDec(int *sbox, int size, int count) {
 //Функція генерації S-Box'у за допомогою методу Рою Часток
 
 int *particleSwarmOptimization(int size, int count, int N){
-    int maxIter = 250; //according to article
+    int maxIter = 10; //according to article
     srand(time(NULL));
     int flag = rand()%size;
     int population[2*N][size];
@@ -3070,11 +3078,11 @@ int *particleSwarmOptimization(int size, int count, int N){
                 int t = arrNL[j - 1];
                 arrNL[j - 1] = arrNL[j];
                 arrNL[j] = t;
-                for (int k = 0; k < size; ++k) {
-                    g[k] = population[j - 1][k];
-                    population[j - 1][k] = population[j][k];
-                    population[j][k] = g[k];
-                }
+                    for (int k = 0; k < size; ++k) {
+                        g[k] = population[j - 1][k];
+                        population[j - 1][k] = population[j][k];
+                        population[j][k] = g[k];
+                    }
             }
         }
     }
@@ -3094,9 +3102,9 @@ int *particleSwarmOptimization(int size, int count, int N){
         gBest[m] = population[0][m];
     }
     int pBest[N][size];
-    for (int i = 0; i < N; ++i){
+    for (int i = 1; i < N; ++i){
         for (int j = 0; j < size; ++j){
-            pBest[i][j] = population[i][j];
+            pBest[i-1][j] = population[i][j];
         }
     }
     printf("\n\n");
@@ -3105,7 +3113,7 @@ int *particleSwarmOptimization(int size, int count, int N){
         printf("%d, ",gBest[m]);
     }
     printf("\npBest\n");
-    for (int q = 1; q < N; ++q){
+    for (int q = 0; q < N-1; ++q){
         for(int w = 0; w < size; ++w){
             printf("%d, ",pBest[q][w]);
         }
@@ -3114,7 +3122,9 @@ int *particleSwarmOptimization(int size, int count, int N){
     double weight = 0.6;
     int Vel[N][size];
     int arrNLSorted[size];
+    int firstTime = 1;
     while(maxIter > 0) {
+        printf("\nWHILE\n");
         int Q = 100;
         int rd1 = rand() % (Q);
         double xr1 = (double) rd1 / Q;
@@ -3140,8 +3150,14 @@ int *particleSwarmOptimization(int size, int count, int N){
         int tempSbox2[size];
         for (int i = 0; i < N; ++i) {
             for (int j = 0; j < size;) {
-                Vel[i][j] = ceil(weight * Vel[i][j] + c1 * r1 * (pBest[i][j] - population[i][j] +
-                                                                 c2 * r2 * (gBest[j] - population[i][j])));
+                if (firstTime == 1){
+                    Vel[i][j] = ceil(weight * Vel[i][j] + c1 * r1 * (gBest[j] - population[i][j] +
+                                                                     c2 * r2 * (gBest[j] - population[i][j])));
+                }
+                else {
+                    Vel[i][j] = ceil(weight * Vel[i][j] + c1 * r1 * (pBest[i][j] - population[i][j] +
+                                                                     c2 * r2 * (gBest[j] - population[i][j])));
+                }
                 if (Vel[i][j] < 0) {
                     Vel[i][j] = myModulusDec((Vel[i][j] + 256), 256);
                 }
@@ -3233,8 +3249,39 @@ int *particleSwarmOptimization(int size, int count, int N){
             }
             printf("\n\n");
         }
-        maxIter = maxIter - 25;
+        for (int m = 0; m < size; ++m){
+            gBest[m] = population[0][m];
+        }
+        for (int i = 1; i < N; ++i){
+            for (int j = 0; j < size; ++j){
+                pBest[i-1][j] = population[i][j];
+            }
+        }
+        printf("\n\n");
+        printf("\ngBest\n");
+        for (int m = 0; m < size; ++m){
+            printf("%d, ",gBest[m]);
+        }
+        printf("\npBest\n");
+        for (int q = 0; q < N-1; ++q){
+            for(int w = 0; w < size; ++w){
+                printf("%d, ",pBest[q][w]);
+            }
+            printf("\n\n");
+        }
+        maxIter = maxIter-1;
+        firstTime = 0;
     }
+    //printf("\n\nFinal data\n\n");
+    int *result = calloc(N*size, sizeof(int));
+    for (int q = 0; q < N; ++q) {
+        for (int w = 0; w < size; ++w) {
+            result[q * size + w] = population[q][w];
+            //printf("%d, ", result[q * size + w]);
+        }
+        //printf("\n\n");
+    }
+    return result;
 }
 
 //Перемішування Фішера-Йейтса
