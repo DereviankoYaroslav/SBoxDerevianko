@@ -833,7 +833,53 @@ int main(int args, char **argv) {
     printf("\nS-box with not zero redundancy -  %d \n", flag);
     free(ar2);*/
 
-    int *ar = particleSwarmOptimization(256,8,5);
+    int *ar = particleSwarmOptimization(256,8,40);
+
+    /*FILE *file;
+    fopen_s(&file, "sbox110NLCheck.txt", "w");
+    if (file == NULL) {
+        printf("ERROR: Can't save sbox to file!\n");
+        for (;;);
+    }
+
+
+    int ar[] = {59, 124, 119, 123, 242, 107, 111, 197, 48, 1, 103, 43, 254, 215, 171, 118, 202, 130, 201, 125, 250, 89, 71, 240, 173, 212, 162, 175, 156, 164, 114, 192, 183, 253, 147, 38, 54, 63, 247, 204, 52, 165, 229, 241, 113, 216, 49, 21, 4, 199, 35, 195, 24, 150, 5, 154, 7, 18, 128, 226, 235, 39, 178, 117, 9, 131, 44, 26, 27, 110, 90, 160, 82, 137, 214, 179, 41, 227, 47, 132, 83, 209, 0, 237, 32, 252, 177, 91, 106, 203, 190, 57, 74, 76, 88, 207, 208, 239, 170, 251, 67, 77, 51, 133, 69,
+            249, 2, 127, 80, 60, 159, 168, 81, 163, 64, 143, 146, 157, 56, 245, 188, 182, 218, 33, 16, 255, 243, 210, 205, 12, 19, 236, 95, 151, 68, 23, 196, 167, 126, 61, 100, 93, 25, 115, 96, 129, 79, 220, 34, 42, 144, 136, 70, 238, 184, 20, 222, 94,
+            11, 219, 224, 50, 58, 10, 73, 6, 36, 92, 194, 211, 172, 98, 145, 149, 228, 121, 231, 200, 55, 109, 141, 213, 78, 169, 108, 86, 244, 234, 101, 122, 174, 8, 186, 120, 37, 46, 28, 166, 180, 198, 232, 221, 116, 31, 75, 189, 139, 138, 112, 62,
+            181, 102, 72, 3, 246, 14, 97, 53, 87, 185, 134, 193, 29, 158, 225, 248, 152, 17, 105, 217, 142, 148, 155, 30, 135, 233,
+            206, 85, 40, 223, 140, 161, 104, 13, 191, 230, 66, 99, 65, 153, 45, 15, 176, 84, 187, 22};
+
+    int LAT = LATMax(ar,256,8);
+    int NL = raiseToPower(2, 8 - 1) - LAT;
+    fprintf( file,"\nNon-linearity from LAT = %d \n", NL);
+    fprintf(file,"\n");
+
+
+    fprintf(file, "\n");
+    for (int i = 0; i < 256; i++) {
+        fprintf(file, "0x%0X, ", ar[i]);
+    }
+    fprintf(file, "\n");
+    fclose(file);*/
+
+    /*int counter = 0;
+    for (int i = 0; i < 256; ++i){
+        if (ar[i] >= 0){
+            counter++;
+        }
+    }
+    printf("%d ", counter);*/
+
+    /*int LAT2 = LATMax(ar,256,8);
+    int NL2 = raiseToPower(2, 8 - 1) - LAT2;
+    printf("\nNon-linearity from LAT = %d \n", NL2);
+    printf("\n");
+
+
+    int sp [255][256];
+    int ac [255][256];
+    int uc = linearRedundancy(ar, 256, 8, sp, ac);
+    printf("Linear redundancy = %d \n", (size-1) - uc);*/
 
     /*int *ar = SBoxGeneratingDec(n,n,10);
 
@@ -3039,7 +3085,7 @@ int *particleSwarmOptimization(int size, int count, int N){
     printf("\nSORTED BY Non-Linearity\n");
     for (int q = 0; q < N; ++q){
         for(int w = 0; w < size; ++w){
-            printf("%d ",population[q][w]);
+            printf("%d, ",population[q][w]);
         }
         printf("\n\n");
     }
@@ -3056,12 +3102,12 @@ int *particleSwarmOptimization(int size, int count, int N){
     printf("\n\n");
     printf("\ngBest\n");
     for (int m = 0; m < size; ++m){
-        printf("%d ",gBest[m]);
+        printf("%d, ",gBest[m]);
     }
     printf("\npBest\n");
     for (int q = 1; q < N; ++q){
         for(int w = 0; w < size; ++w){
-            printf("%d ",pBest[q][w]);
+            printf("%d, ",pBest[q][w]);
         }
         printf("\n\n");
     }
@@ -3072,10 +3118,10 @@ int *particleSwarmOptimization(int size, int count, int N){
         int Q = 100;
         int rd1 = rand() % (Q);
         double xr1 = (double) rd1 / Q;
-        double c1 = 2*xr1;
+        double c1 = 2 * xr1;
         int rd2 = rand() % (Q);
         double xr2 = (double) rd2 / Q;
-        double c2 = 2*xr2;
+        double c2 = 2 * xr2;
         int rd3 = rand() % (Q);
         double xr3 = (double) rd3 / Q;
         double r1 = xr3;
@@ -3087,26 +3133,25 @@ int *particleSwarmOptimization(int size, int count, int N){
         printf("xr3 = %lf ", xr3);
         printf("xr4 = %lf \n", xr4);
         printf("\n\n");*/
-        for (int b = 0; b < N; ++b){
+        for (int b = 0; b < N; ++b) {
             arrNLSorted[b] = arrNL[b];
         }
         int tempSbox[size];
-        int tempSbox2 [size];
-        for (int i = 0; i < N; ++i){
-            for (int j = 0; j < size;){
-                Vel[i][j] = ceil(weight*Vel[i][j] + c1*r1*(pBest[i][j] - population[i][j]+
-                        c2*r2*(gBest[j]-population[i][j])));
-                if (Vel[i][j] < 0){
-                    Vel[i][j] = myModulusDec((Vel[i][j]+256),256);
+        int tempSbox2[size];
+        for (int i = 0; i < N; ++i) {
+            for (int j = 0; j < size;) {
+                Vel[i][j] = ceil(weight * Vel[i][j] + c1 * r1 * (pBest[i][j] - population[i][j] +
+                                                                 c2 * r2 * (gBest[j] - population[i][j])));
+                if (Vel[i][j] < 0) {
+                    Vel[i][j] = myModulusDec((Vel[i][j] + 256), 256);
                 }
                 //printf("Vel[%d][%d] = %d ", i,j,Vel[i][j]);
-                int X = myModulusDec((population[i][j]+Vel[i][j]),256);
+                int X = myModulusDec((population[i][j] + Vel[i][j]), 256);
                 int contains;
                 if (contains == 0) {
                     tempSbox[j] = X;
-                }
-                else{
-                    tempSbox[j] = myModulusDec((tempSbox[j]+rand()),256);
+                } else {
+                    tempSbox[j] = myModulusDec((tempSbox[j] + rand()), 256);
                     /*if (tempSbox[j] == 0){
                         tempSbox[j] = myModulusDec((tempSbox[j]+rand()),256);
                     }*/
@@ -3129,61 +3174,66 @@ int *particleSwarmOptimization(int size, int count, int N){
                     j++;
                 }
             }
-            for(int k = 0; k < size; ++k) {
+            for (int k = 0; k < size; ++k) {
                 population[N + i][k] = tempSbox[k];
                 //printf("%d ", tempSbox[k]);
             }
             //printf("\n");
         }
-        maxIter = maxIter-25;
-    }
-    /*printf("\nNEW Arrays\n");
-    for (int q = 0; q < 2*N; ++q){
-        for(int w = 0; w < size; ++w){
-            printf("%d, ",population[q][w]);
+        /*printf("\nNEW Arrays\n");
+        for (int q = 0; q < 2*N; ++q){
+            for(int w = 0; w < size; ++w){
+                printf("%d, ",population[q][w]);
+            }
+            int LAT = LATMax(population[q],size,count);
+            int NL = raiseToPower(2, count - 1) - LAT;
+            printf( "\nNon-linearity from LAT = %d \n", NL);
+            printf("\n");
+            printf("\n\n");
+        }*/
+        int arrNL2[2 * N];
+        for (int q = 0; q < 2 * N; ++q) {
+            for (int w = 0; w < size; ++w) {
+                printf("%d ", population[q][w]);
+            }
+            int LAT = LATMax(population[q], size, count);
+            int NL = raiseToPower(2, count - 1) - LAT;
+            printf("\nNon-linearity from LAT = %d \n", NL);
+            printf("\n");
+            arrNL2[q] = NL;
         }
-        int LAT = LATMax(population[q],size,count);
-        int NL = raiseToPower(2, count - 1) - LAT;
-        printf( "\nNon-linearity from LAT = %d \n", NL);
-        printf("\n");
-        printf("\n\n");
-    }*/
-    int arrNL2[2*N];
-    for (int q = 0; q < 2*N; ++q){
-        for(int w = 0; w < size; ++w){
-            printf("%d ",population[q][w]);
-        }
-        int LAT = LATMax(population[q],size,count);
-        int NL = raiseToPower(2, count - 1) - LAT;
-        printf( "\nNon-linearity from LAT = %d \n", NL);
-        printf("\n");
-        arrNL2[q] = NL;
-    }
-    int g2[size];
-    for (int i = 0; i < 2*N; ++i) {
-        for (int j = (2*N - 1); j > i; --j) {
-            if (arrNL2[j] > arrNL2[j - 1]) {
-                int h = arrNL2[j - 1];
-                arrNL2[j - 1] = arrNL2[j];
-                arrNL2[j] = h;
-                for (int k = 0; k < size; ++k) {
-                    g2[k] = population[j - 1][k];
-                    population[j - 1][k] = population[j][k];
-                    population[j][k] = g2[k];
+        int g2[size];
+        for (int i = 0; i < 2 * N; ++i) {
+            for (int j = (2 * N - 1); j > i; --j) {
+                if (arrNL2[j] > arrNL2[j - 1]) {
+                    int h = arrNL2[j - 1];
+                    arrNL2[j - 1] = arrNL2[j];
+                    arrNL2[j] = h;
+                    for (int k = 0; k < size; ++k) {
+                        g2[k] = population[j - 1][k];
+                        population[j - 1][k] = population[j][k];
+                        population[j][k] = g2[k];
+                    }
                 }
             }
         }
-    }
-    printf("\n");
-    for (int q = 0; q < 2*N; ++q){
-        printf( "\n%d ", arrNL2[q]);
-    }
-    printf("\nSORTED BY Non-Linearity\n");
-    for (int q = 0; q < 2*N; ++q){
-        for(int w = 0; w < size; ++w){
-            printf("%d ",population[q][w]);
+        printf("\n");
+        for (int q = 0; q < 2 * N; ++q) {
+            printf("\n%d ", arrNL2[q]);
         }
-        printf("\n\n");
+        for (int q = N; q < 2 * N; ++q) {
+            for (int w = 0; w < size; ++w) {
+                population[q][w] = 0;
+            }
+        }
+        printf("\nSORTED BY Non-Linearity\n");
+        for (int q = 0; q < N; ++q) {
+            for (int w = 0; w < size; ++w) {
+                printf("%d, ", population[q][w]);
+            }
+            printf("\n\n");
+        }
+        maxIter = maxIter - 25;
     }
 }
 
