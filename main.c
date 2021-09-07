@@ -132,7 +132,7 @@ int *SBoxGeneratingDec(int n, int m, int counter);
 
 int NLOfSBoxDec(int *sbox, int size, int count);
 
-int *particleSwarmOptimization(int size, int count, int N);
+int *particleSwarmOptimization(int size, int count, int N, int maxIter, int mode);
 
 void FisherYates(int *player, int n);
 
@@ -832,30 +832,65 @@ int main(int args, char **argv) {
     }
     printf("\nS-box with not zero redundancy -  %d \n", flag);
     free(ar2);*/
+    int mode;
+    int N;
+    int maxIter;
 
-    /*int *ar = particleSwarmOptimization(256,8,10);
+    FILE *readMode;
+    readMode = fopen("Mode.txt", "r");
+    fscanf(readMode, "%d", &mode);
+    fclose(readMode);
 
-    printf("\n\nFinal data\n\n");
+    FILE *readN;
+    readN = fopen("N value (amount of s-boxes in population).txt", "r");
+    fscanf(readN, "%d", &N);
+    fclose(readN);
 
-    for (int q = 0; q < 10; ++q) {
+    FILE *readMaxIter;
+    readMaxIter = fopen("maxIter value (number of iterations).txt", "r");
+    fscanf(readMaxIter, "%d", &maxIter);
+    fclose(readMaxIter);
+
+
+    int *ar = particleSwarmOptimization(256,8,N,maxIter,mode);
+
+    FILE *file;
+    fopen_s(&file, "PSO results.txt", "w");
+    if (file == NULL) {
+        printf("ERROR: Can't save sbox to file!\n");
+        for (;;);
+    }
+    fprintf(file,"\n\nPSO S-boxes\n\n");
+    for (int q = 1; q < N; ++q) {
+        for (int w = 0; w < size; ++w) {
+            fprintf(file,"%d, ", ar[q * size + w]);
+        }
+        fprintf(file,"\n\n");
+    }
+    fprintf(file, "\n");
+
+    printf("\n\nPSO S-boxes\n\n");
+
+    for (int q = 1; q < N; ++q) {
         for (int w = 0; w < size; ++w) {
             printf("%d, ", ar[q * size + w]);
         }
         printf("\n\n");
-    }*/
+    }
 
-    FILE *file;
+    /*FILE *file;
     fopen_s(&file, "sbox110NLCheck.txt", "w");
     if (file == NULL) {
         printf("ERROR: Can't save sbox to file!\n");
         for (;;);
     }
-
-
-    int ar[] = {195, 124, 119, 123, 242, 107, 111, 197, 48, 1, 103, 43, 254, 215, 171, 118, 202, 130, 201, 125, 250, 89, 71, 240, 173, 212, 162, 175, 156, 164, 114, 192, 183, 253, 147, 38, 54, 63, 247, 204, 52, 165, 229, 241, 113, 216, 49, 21, 4, 199, 35,
-            214, 24, 150, 5, 154, 7, 18, 128, 226, 235, 39, 178, 117, 9, 131, 44, 26, 27, 110, 90, 160, 82, 59, 146, 179, 41, 227, 47, 132, 83, 209, 0, 237, 32, 252, 177, 91, 106, 203, 190, 57, 74, 76, 88, 207, 208, 239, 170, 251, 67, 77, 51, 133, 69,
-            249, 2, 127, 80, 60, 159, 168, 81, 163, 64, 143, 65, 157, 56, 245, 188, 182, 218, 33, 16, 255, 243, 210, 205, 12, 19, 236, 95, 151, 68, 23, 196, 167, 126, 61, 100, 93, 25, 115, 96, 129, 79, 220, 34, 42, 144, 136, 70, 238, 184, 20, 222, 94,
-            11, 219, 224, 50, 58, 10, 73, 6, 36, 92, 194, 211, 172, 98, 145, 149, 248, 121, 231, 200, 55, 109, 141, 213, 78, 169, 108, 86, 244, 234, 101, 122, 174, 8, 186, 120, 37, 46, 28, 166, 180, 198, 232, 221, 116, 31, 75, 189, 139, 138, 112, 62, 181, 102, 72, 3, 246, 14, 97, 53, 87, 185, 134, 193, 29, 158, 225, 15, 152, 17, 105, 217, 142, 148, 155, 30, 135, 233, 206, 85, 40, 223, 140, 161, 137, 13, 230, 153, 66, 104, 191, 228, 45, 187, 22, 84, 99, 176,};
+int ar2[] = {100, 203, 184, 5, 10, 84, 209, 0, 74, 97, 225, 232, 187, 113, 214, 141, 125, 131, 254, 200, 132, 210, 240, 164, 13, 130, 51, 201, 121, 63, 249, 162, 120, 202, 148, 36, 45, 1, 171, 65, 20, 80, 59, 56, 186, 192, 153, 138, 124, 126, 39, 196, 27, 238, 82, 144, 237, 221, 11, 110, 47, 103, 18, 14, 243, 251, 55, 25, 28, 33, 68, 147, 96, 35, 93, 142, 29, 73, 106, 234, 108, 90, 64, 151, 111, 253, 78, 158, 152, 43, 7, 182, 167, 4, 218, 231, 112, 72, 248, 6, 91, 178, 52, 57, 69, 145, 37, 79, 181, 247, 143, 67, 198, 241, 205, 155, 161, 92, 134, 246, 24, 137, 177, 170, 199, 15, 149, 105, 49, 174, 53, 8, 83, 107, 70, 189, 197, 71, 195, 109, 233, 98, 156, 66, 2, 213, 166, 19, 60, 204, 250, 183, 168, 239, 212, 87, 222, 54, 31, 154, 104, 163, 230, 129, 215, 191, 3, 219, 127, 185, 173, 188, 117, 88, 136, 46, 44, 176, 242, 227, 180, 58, 128, 34, 62, 21, 99, 235, 32, 206, 226, 16, 255, 157, 114, 236, 42, 75, 81, 17, 101, 223, 146, 102, 76, 135, 207, 245, 216, 165, 217, 40, 228, 77, 61, 38, 94, 95, 150, 123, 190, 194, 86, 85, 172, 115, 50, 179, 48, 89, 160, 244, 26, 12, 229, 175, 140, 30, 41, 252, 119, 193, 22, 118, 133, 208, 169, 211, 116, 220, 122, 9, 139, 159, 224, 23};
+    int ar[] = {252, 124, 119, 123, 242, 107, 111, 197, 48, 1, 103, 43, 254, 215, 171, 118, 202, 130, 201, 125, 250, 89, 71, 240, 173, 212, 162, 175, 156, 164, 114, 192, 183, 253, 147, 38, 54, 63, 247, 204, 52, 165, 229, 241, 113, 216, 49, 21, 4, 199, 35,
+            195, 24, 150, 5, 154, 7, 18, 128, 226, 235, 39, 178, 117, 9, 131, 44, 26, 27, 110, 90, 160, 82, 59, 214, 179, 41, 227, 47, 132, 83, 209, 0, 237, 32, 146, 177, 91, 106, 203, 190, 57, 74, 76, 88, 207, 208, 239, 170, 251, 67, 77, 51, 133, 69,
+            249, 2, 127, 80, 60, 159, 168, 81, 163, 64, 143, 234, 157, 56, 245, 188, 182, 218, 33, 16, 255, 243, 210, 205, 12, 19, 236, 95, 151, 68, 23, 196, 167, 126, 61, 100, 93, 25, 115, 96, 129, 79, 220, 34, 42, 144, 136, 70, 238, 184, 20, 222, 94,
+            11, 219, 224, 50, 58, 10, 73, 6, 36, 92, 194, 211, 172, 98, 145, 149, 228, 121, 231, 200, 55, 109, 141, 213, 78, 169, 108, 86, 244, 189, 101, 122, 174, 8, 186, 120, 37, 46, 28, 166, 180, 198, 232, 221, 116, 31, 75, 135, 139, 138, 112, 62,
+            181, 102, 72, 3, 246, 14, 97, 53, 87, 185, 134, 193, 29, 158, 225, 248, 152, 17, 105, 217, 142, 148, 155, 30, 176, 233,
+            206, 85, 40, 223, 140, 161, 137, 13, 191, 230, 66, 104, 65, 153, 45, 15, 187, 84, 99, 22};
 
     int LAT = LATMax(ar,256,8);
     int NL = raiseToPower(2, 8 - 1) - LAT;
@@ -868,7 +903,7 @@ int main(int args, char **argv) {
         fprintf(file, "0x%0X, ", ar[i]);
     }
     fprintf(file, "\n");
-    fclose(file);
+    fclose(file);*/
 
     /*int counter = 0;
     for (int i = 0; i < 256; ++i){
@@ -878,7 +913,7 @@ int main(int args, char **argv) {
     }
     printf("%d ", counter);*/
 
-    int LAT2 = LATMax(ar,256,8);
+    /*int LAT2 = LATMax(ar,256,8);
     int NL2 = raiseToPower(2, 8 - 1) - LAT2;
     printf("\nNon-linearity from LAT = %d \n", NL2);
     printf("\n");
@@ -887,7 +922,7 @@ int main(int args, char **argv) {
     int sp [255][256];
     int ac [255][256];
     int uc = linearRedundancy(ar, 256, 8, sp, ac);
-    printf("Linear redundancy = %d \n", (size-1) - uc);
+    printf("Linear redundancy = %d \n", (size - 1) - uc);*/
 
     /*int *ar = SBoxGeneratingDec(n,n,10);
 
@@ -2789,9 +2824,11 @@ int *WHTSpectrumForLinearComb(const int *arr, int size, int count) {
             //printf("%d ", temp[j]);
         }
         int *fxarr = HadamardCoefficients(temp, size, count);
-        bubble_sort(fxarr,size);
         for (int g = 0; g< size; ++g){
             fxarr[g] = abs(fxarr[g]);
+        }
+        bubble_sort(fxarr,size);
+        for (int g = 0; g< size; ++g){
             result[i*size+g] = fxarr[g];
         }
         //printf("\nHADAMARD COEFFICIENTS");
@@ -3045,8 +3082,7 @@ int NLOfSBoxDec(int *sbox, int size, int count) {
 
 //Функція генерації S-Box'у за допомогою методу Рою Часток
 
-int *particleSwarmOptimization(int size, int count, int N){
-    int maxIter = 10; //according to article
+int *particleSwarmOptimization(int size, int count, int N, int maxIter, int mode){
     srand(time(NULL));
     int flag = rand()%size;
     int population[2*N][size];
@@ -3119,11 +3155,14 @@ int *particleSwarmOptimization(int size, int count, int N){
         }
         printf("\n\n");
     }
-    double weight = 0.6;
+    double weight1 = 0.1;
+    double weight2 = 1.6;
+    double weightCur;
+    int curIter = 0;
     int Vel[N][size];
     int arrNLSorted[size];
-    int firstTime = 1;
     while(maxIter > 0) {
+        weightCur = weight1+(curIter-1)*((weight2-weight1)/maxIter);
         printf("\nWHILE\n");
         int Q = 100;
         int rd1 = rand() % (Q);
@@ -3150,12 +3189,12 @@ int *particleSwarmOptimization(int size, int count, int N){
         int tempSbox2[size];
         for (int i = 0; i < N; ++i) {
             for (int j = 0; j < size;) {
-                if (firstTime == 1){
-                    Vel[i][j] = ceil(weight * Vel[i][j] + c1 * r1 * (gBest[j] - population[i][j] +
+                if (mode == 1){
+                    Vel[i][j] = ceil(weightCur * Vel[i][j] + c1 * r1 * (gBest[j] - population[i][j] +
                                                                      c2 * r2 * (gBest[j] - population[i][j])));
                 }
-                else {
-                    Vel[i][j] = ceil(weight * Vel[i][j] + c1 * r1 * (pBest[i][j] - population[i][j] +
+                if (mode == 0) {
+                    Vel[i][j] = ceil(weightCur * Vel[i][j] + c1 * r1 * (pBest[i][j] - population[i][j] +
                                                                      c2 * r2 * (gBest[j] - population[i][j])));
                 }
                 if (Vel[i][j] < 0) {
@@ -3270,7 +3309,7 @@ int *particleSwarmOptimization(int size, int count, int N){
             printf("\n\n");
         }
         maxIter = maxIter-1;
-        firstTime = 0;
+        mode = 0;
     }
     //printf("\n\nFinal data\n\n");
     int *result = calloc(N*size, sizeof(int));
