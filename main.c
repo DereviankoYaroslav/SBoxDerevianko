@@ -791,7 +791,6 @@ int main(int args, char **argv) {
     }
     fclose(file);*/
 
-
     /*int uc = 255;
     int lr = 0;
     int flag = 0;
@@ -912,8 +911,16 @@ int ar2[] = {100, 203, 184, 5, 10, 84, 209, 0, 74, 97, 225, 232, 187, 113, 214, 
         }
     }
     printf("%d ", counter);*/
+    /*int ar[256];
 
-    /*int LAT2 = LATMax(ar,256,8);
+    FILE *fin;
+    fin = fopen("input.txt", "r");
+    for (int i = 0; i < 256; i++) {
+        fscanf(fin, "%d, ", &ar[i]);
+    }
+    fclose(fin);
+
+    int LAT2 = LATMax(ar,256,8);
     int NL2 = raiseToPower(2, 8 - 1) - LAT2;
     printf("\nNon-linearity from LAT = %d \n", NL2);
     printf("\n");
@@ -3114,11 +3121,11 @@ int *particleSwarmOptimization(int size, int count, int N, int maxIter, int mode
                 int t = arrNL[j - 1];
                 arrNL[j - 1] = arrNL[j];
                 arrNL[j] = t;
-                    for (int k = 0; k < size; ++k) {
-                        g[k] = population[j - 1][k];
-                        population[j - 1][k] = population[j][k];
-                        population[j][k] = g[k];
-                    }
+                for (int k = 0; k < size; ++k) {
+                    g[k] = population[j - 1][k];
+                    population[j - 1][k] = population[j][k];
+                    population[j][k] = g[k];
+                }
             }
         }
     }
@@ -3177,11 +3184,11 @@ int *particleSwarmOptimization(int size, int count, int N, int maxIter, int mode
         int rd4 = rand() % (Q);
         double xr4 = (double) rd4 / Q;
         double r2 = xr4;
-        /*printf("xr1 = %lf ", xr1);
-        printf("xr2 = %lf ", xr2);
-        printf("xr3 = %lf ", xr3);
-        printf("xr4 = %lf \n", xr4);
-        printf("\n\n");*/
+        printf("c1 = %lf ", c1);
+        printf("c2 = %lf ", c2);
+        printf("r1 = %lf ", r1);
+        printf("r2 = %lf \n", r2);
+        printf("\n\n");
         for (int b = 0; b < N; ++b) {
             arrNLSorted[b] = arrNL[b];
         }
@@ -3191,11 +3198,11 @@ int *particleSwarmOptimization(int size, int count, int N, int maxIter, int mode
             for (int j = 0; j < size;) {
                 if (mode == 1){
                     Vel[i][j] = ceil(weightCur * Vel[i][j] + c1 * r1 * (gBest[j] - population[i][j] +
-                                                                     c2 * r2 * (gBest[j] - population[i][j])));
+                                                                        c2 * r2 * (gBest[j] - population[i][j])));
                 }
                 if (mode == 0) {
                     Vel[i][j] = ceil(weightCur * Vel[i][j] + c1 * r1 * (pBest[i][j] - population[i][j] +
-                                                                     c2 * r2 * (gBest[j] - population[i][j])));
+                                                                        c2 * r2 * (gBest[j] - population[i][j])));
                 }
                 if (Vel[i][j] < 0) {
                     Vel[i][j] = myModulusDec((Vel[i][j] + 256), 256);
@@ -3227,6 +3234,20 @@ int *particleSwarmOptimization(int size, int count, int N, int maxIter, int mode
                 }
                 if (!contains) {
                     j++;
+                }
+            }
+            if (i == 0) {
+                int LAT = LATMax(tempSbox, size, count);
+                int NL = raiseToPower(2, count - 1) - LAT;
+                if (NL > 98) {
+                    for (int v = 0; v < 16; ++v) {
+                        srand(tempSbox[v] * (curIter * v) % 256);
+                        int coeff = rand() % 50;
+                        int coeff2 = rand() % 256;
+                        int temp = tempSbox[coeff];
+                        tempSbox[coeff] = tempSbox[coeff2];
+                        tempSbox[coeff2] = temp;
+                    }
                 }
             }
             for (int k = 0; k < size; ++k) {
@@ -3288,12 +3309,24 @@ int *particleSwarmOptimization(int size, int count, int N, int maxIter, int mode
             }
             printf("\n\n");
         }
-        for (int m = 0; m < size; ++m){
-            gBest[m] = population[0][m];
+        if (curIter == 0) {
+            for (int m = 0; m < size; ++m) {
+                gBest[m] = population[0][m];
+            }
+            for (int i = 1; i < N; ++i) {
+                for (int j = 0; j < size; ++j) {
+                    pBest[i - 1][j] = population[i][j];
+                }
+            }
         }
-        for (int i = 1; i < N; ++i){
-            for (int j = 0; j < size; ++j){
-                pBest[i-1][j] = population[i][j];
+        else {
+            for (int m = 0; m < size; ++m) {
+                gBest[m] = population[1][m];
+            }
+            for (int i = 2; i < N; ++i) {
+                for (int j = 0; j < size; ++j) {
+                    pBest[i - 1][j] = population[i][j];
+                }
             }
         }
         printf("\n\n");
@@ -3310,6 +3343,7 @@ int *particleSwarmOptimization(int size, int count, int N, int maxIter, int mode
         }
         maxIter = maxIter-1;
         mode = 0;
+        ++curIter;
     }
     //printf("\n\nFinal data\n\n");
     int *result = calloc(N*size, sizeof(int));
